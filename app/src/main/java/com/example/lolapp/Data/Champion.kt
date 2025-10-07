@@ -2,6 +2,10 @@ package com.example.lolapp.Data
 
 import com.google.gson.annotations.SerializedName
 
+data class ChampionsResponse(
+    @SerializedName("data") val data: Map<String, Champion>
+)
+
 data class Champion(
     @SerializedName("id") val id: String,
     @SerializedName("name") val name: String,
@@ -10,5 +14,5 @@ data class Champion(
 )
 
 data class ChampionImageResponse(
-    @SerializedName("full") val url: String
+    @SerializedName("full") val full: String
 )
