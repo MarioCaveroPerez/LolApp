@@ -7,6 +7,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -44,6 +45,7 @@ class MainActivity : AppCompatActivity() {
 
         loadChampions()
         setupToolbar()
+        setupBackPressHandler()
     }
 
     private fun setupToolbar() {
@@ -63,6 +65,36 @@ class MainActivity : AppCompatActivity() {
             val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT)
         }
+    }
+
+    private fun setupBackPressHandler() {
+        // Creamos un callback que se ejecuta al pulsar atrás
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                if (binding.sbvChampsLol.visibility == View.VISIBLE) {
+                    // Si la SearchBar está visible, la ocultamos
+                    binding.sbvChampsLol.visibility = View.GONE
+
+                    // Restauramos la Toolbar
+                    binding.ivSearch.visibility = View.VISIBLE
+                    binding.btnMenu.visibility = View.VISIBLE
+                    binding.ivMenu.visibility = View.VISIBLE
+                    binding.tvTitle.visibility = View.VISIBLE
+                    binding.btnSearch.visibility = View.VISIBLE
+
+                    // Ocultamos teclado
+                    val editText = binding.sbvChampsLol.findViewById<EditText>(
+                        com.ignite.material.searchbarview.R.id.editTextSearch
+                    )
+                    val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                    imm.hideSoftInputFromWindow(editText.windowToken, 0)
+                } else {
+                    // Si la SearchBar no está visible, dejamos que el sistema maneje el back
+                    isEnabled = false
+                    onBackPressedDispatcher.onBackPressed()
+                }
+            }
+        })
     }
 
     private fun loadChampions() {

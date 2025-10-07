@@ -11,84 +11,105 @@
     <Toolbar
         android:id="@+id/toolbarMain"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="120dp"
         android:background="@color/toolbar_dark"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-
-        <FrameLayout
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_gravity="start|center_vertical"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="48dp">
-
-            <ImageView
-                android:id="@+id/ivMenu"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:layout_gravity="center"
-                android:src="@drawable/ic_menu"
-                app:tint="@color/white" />
-
-            <Button
-                android:id="@+id/btnMenu"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@android:color/transparent" />
-        </FrameLayout>
-
-        <FrameLayout
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_gravity="end|center_vertical"
-            android:layout_marginTop="48dp"
-            android:layout_marginEnd="24dp">
-
-            <ImageView
-                android:id="@+id/ivSearch"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:layout_gravity="center"
-                android:src="@drawable/ic_search"
-                app:tint="@color/white" />
-
-            <Button
-                android:id="@+id/btnSearch"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@android:color/transparent"
-                android:text="" />
-        </FrameLayout>
-
-        <TextView
-            android:id="@+id/tvTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:layout_marginTop="46dp"
-            android:fontFamily="@font/quicksand_regular"
-            android:text="@string/champions"
-            android:textColor="@color/gold"
-            android:textSize="32sp"
-            android:textStyle="bold" />
-
-        <com.ignite.material.searchbarview.SearchBarView
-            android:id="@+id/sbvChampsLol"
+        <!-- Usamos ConstraintLayout dentro del Toolbar -->
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            app:backgroundColor="?attr/colorSurfaceVariant"
-            app:hint="Search Champion..."
-            android:layout_gravity="start"
-            app:iconTint="?attr/colorOnSurfaceVariant"
-            android:layout_marginTop="20dp"
-            app:textAppearance="@style/TextAppearance.Material3.BodyLarge"
-            app:textColor="?attr/colorOnSurface"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            android:layout_height="match_parent">
+
+            <!-- Botón menú -->
+            <FrameLayout
+                android:id="@+id/flMenu"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginTop="26dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginStart="16dp">
+
+                <ImageView
+                    android:id="@+id/ivMenu"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_menu"
+                    app:tint="@color/white" />
+
+                <Button
+                    android:id="@+id/btnMenu"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@android:color/transparent" />
+            </FrameLayout>
+
+            <!-- Botón búsqueda -->
+            <FrameLayout
+                android:id="@+id/flSearch"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginEnd="28dp"
+                android:layout_marginTop="26dp">
+
+                <ImageView
+                    android:id="@+id/ivSearch"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_search"
+                    app:tint="@color/white" />
+
+                <Button
+                    android:id="@+id/btnSearch"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@android:color/transparent" />
+            </FrameLayout>
+
+            <!-- Título -->
+            <TextView
+                android:id="@+id/tvTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:fontFamily="@font/quicksand_regular"
+                android:text="@string/champions"
+                android:textColor="@color/gold"
+                android:textSize="32sp"
+                android:layout_marginEnd="9dp"
+                android:layout_marginTop="20dp"
+                android:textStyle="bold" />
+
+            <!-- SearchBarView -->
+            <com.ignite.material.searchbarview.SearchBarView
+                android:id="@+id/sbvChampsLol"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="26dp"
+                app:backgroundColor="?attr/colorSurfaceVariant"
+                app:hint="Search Champion..."
+                app:iconTint="?attr/colorOnSurfaceVariant"
+                app:textAppearance="@style/TextAppearance.Material3.BodyLarge"
+                app:textColor="?attr/colorOnSurface" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </Toolbar>
 
@@ -101,8 +122,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbarMain">
-
-    </androidx.recyclerview.widget.RecyclerView>
+        app:layout_constraintTop_toBottomOf="@+id/toolbarMain" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
