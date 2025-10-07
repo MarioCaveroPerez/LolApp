@@ -59,4 +59,11 @@ dependencies {
 
     //Picasso
     implementation("com.squareup.picasso:picasso:2.8")
+
+    //SearchBarViewMansour
+    implementation("com.github.IgniteCoders:SearchBarView:1.0.1")
+
+    //GoogleFonts
+    implementation("androidx.core:core:1.12.0")
+
 }

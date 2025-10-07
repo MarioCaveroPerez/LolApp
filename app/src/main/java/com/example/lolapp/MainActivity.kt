@@ -1,6 +1,11 @@
 package com.example.lolapp
 
+import android.content.Context
 import android.os.Bundle
+import android.view.View
+import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -38,6 +43,26 @@ class MainActivity : AppCompatActivity() {
         binding.rvLolChampsList.layoutManager = GridLayoutManager(this, 4)
 
         loadChampions()
+        setupToolbar()
+    }
+
+    private fun setupToolbar() {
+        binding.btnSearch.setOnClickListener {
+
+            binding.ivSearch.visibility = View.GONE
+            binding.btnMenu.visibility = View.GONE
+            binding.ivMenu.visibility = View.GONE
+            binding.tvTitle.visibility = View.GONE
+            binding.btnSearch.visibility = View.GONE
+
+            binding.sbvChampsLol.visibility = View.VISIBLE
+
+
+            val editText = binding.sbvChampsLol.findViewById<EditText>(com.ignite.material.searchbarview.R.id.editTextSearch)
+            editText.requestFocus()
+            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT)
+        }
     }
 
     private fun loadChampions() {

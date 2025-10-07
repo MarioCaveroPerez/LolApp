@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">LolApp</string>
+    <string name="champions">CHAMPIONS</string>
 </resources>
