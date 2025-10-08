@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/general"
+            android:icon="@android:color/transparent"
+            android:title="@string/general" />
+
+        <item
+            android:id="@+id/habilidades"
+            android:icon="@android:color/transparent"
+
+            android:title="@string/habilidades" />
+
+        <item
+            android:id="@+id/skins"
+            android:icon="@android:color/transparent"
+
+            android:title="@string/skins" />
+
+        <item
+            android:id="@+id/lore"
+            android:icon="@android:color/transparent"
+
+            android:title="@string/lore" />
+    </group>
+</menu>

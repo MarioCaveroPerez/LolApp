@@ -15,6 +15,11 @@ class ChampionAdapter(var championList: List<Champion>, val onItemClick: (String
         return ChampionViewHolder(view)
     }
 
+    fun updateList(newList: List<Champion>) {
+        championList = newList
+        notifyDataSetChanged()
+    }
+
     override fun onBindViewHolder(
         holder: ChampionViewHolder,
         position: Int

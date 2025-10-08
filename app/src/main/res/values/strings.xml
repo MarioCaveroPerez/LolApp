@@ -6,4 +6,11 @@
     <string name="settings">Settings</string>
     <string name="champions_menu">Champions</string>
     <string name="info">Info</string>
+    <string name="general">General</string>
+    <string name="habilidades">Habilidades</string>
+    <string name="skins">Skins</string>
+    <string name="lore">Lore</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="skin_name">Skin Name</string>
 </resources>

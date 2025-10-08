@@ -4,5 +4,6 @@
     <color name="toolbar_dark">#282525</color>
     <color name="white">#FFFFFFFF</color>
     <color name="red">#FF0000</color>
+    <color name="background_main">#891C1F37</color>
     <color name="gold">#DBB110</color>
 </resources>

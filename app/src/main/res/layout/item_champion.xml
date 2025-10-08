@@ -36,13 +36,14 @@
     <TextView
         android:id="@+id/nameChampion"
         android:layout_width="0dp"
+        android:fontFamily="@font/quicksand_regular"
         android:layout_height="wrap_content"
         android:textColor="@android:color/white"
         tools:textColor="@color/black"
-        android:textSize="14sp"
+        android:textSize="13sp"
         android:gravity="center"
         app:layout_constraintTop_toBottomOf="@id/cvImg"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        tools:text="Mario"/>
+        tools:text="Heimerdingerr"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,6 +1,7 @@
 package com.example.lolapp
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.InputMethodManager
@@ -16,9 +17,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.widget.doOnTextChanged
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.GridLayoutManager
+import com.example.lolapp.Activities.DetailChampionsActivity
 import com.example.lolapp.Adapters.ChampionAdapter
+import com.example.lolapp.Data.Champion
 import com.example.lolapp.Utils.ApiService
 import com.example.lolapp.databinding.ActivityMainBinding
 import com.google.android.material.navigation.NavigationView
@@ -31,6 +35,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class MainActivity : AppCompatActivity() {
 
+    private lateinit var allChampions: List<Champion>
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var navView: NavigationView
 
@@ -97,9 +102,26 @@ class MainActivity : AppCompatActivity() {
             val editText =
                 binding.sbvChampsLol.findViewById<EditText>(com.ignite.material.searchbarview.R.id.editTextSearch)
             editText.requestFocus()
+            editText.doOnTextChanged { text, _, _, _ ->
+                val query = normalizeText(text.toString())
+                val filteredList = allChampions.filter {
+                    normalizeText(it.name).contains(query)
+                }
+                adapter.updateList(filteredList)
+            }
+
             val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT)
         }
+
+    }
+
+    fun normalizeText(text: String): String {
+        return text
+            .lowercase()
+            .replace("'", "")
+            .replace("\\s".toRegex(), "")
+            .replace("[^\\p{ASCII}]".toRegex(), "")
     }
 
     private fun setupBackPressHandler() {
@@ -139,10 +161,12 @@ class MainActivity : AppCompatActivity() {
                 val championList = response.data.values.toList()
 
                 withContext(Dispatchers.Main) {
-                    adapter = ChampionAdapter(championList) { id ->
-                        Toast.makeText(this@MainActivity, "Has pulsado $id", Toast.LENGTH_SHORT)
-                            .show()
-                    }
+                    allChampions = championList
+                    adapter = ChampionAdapter(allChampions) { championId ->
+                    val intent = Intent(this@MainActivity, DetailChampionsActivity::class.java)
+                    intent.putExtra("champion_id", championId)
+                    startActivity(intent)
+                }
                     binding.rvLolChampsList.adapter = adapter
                 }
             } catch (e: Exception) {
