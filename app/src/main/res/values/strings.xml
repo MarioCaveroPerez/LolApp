@@ -1,4 +1,9 @@
 <resources>
     <string name="app_name">LolApp</string>
     <string name="champions">CHAMPIONS</string>
+    <string name="items">Items</string>
+    <string name="runes">Runes</string>
+    <string name="settings">Settings</string>
+    <string name="champions_menu">Champions</string>
+    <string name="info">Info</string>
 </resources>

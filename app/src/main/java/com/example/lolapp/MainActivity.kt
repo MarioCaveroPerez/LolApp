@@ -6,16 +6,22 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.StackView
 import android.widget.Toast
+import android.widget.Toolbar
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.enableEdgeToEdge
+import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.GravityCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.lolapp.Adapters.ChampionAdapter
 import com.example.lolapp.Utils.ApiService
 import com.example.lolapp.databinding.ActivityMainBinding
+import com.google.android.material.navigation.NavigationView
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -24,6 +30,9 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 class MainActivity : AppCompatActivity() {
+
+    private lateinit var drawerLayout: DrawerLayout
+    private lateinit var navView: NavigationView
 
     private lateinit var binding: ActivityMainBinding
 
@@ -41,6 +50,28 @@ class MainActivity : AppCompatActivity() {
         retrofit = getRetrofit()
         apiService = retrofit.create(ApiService::class.java)
 
+        drawerLayout = binding.drawerLayout
+        navView = binding.navView
+
+        navView.setNavigationItemSelectedListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.nav_champ -> {
+                    Toast.makeText(this, "Campeones", Toast.LENGTH_SHORT).show()
+                }
+                R.id.nav_items -> {
+                    Toast.makeText(this, "Ítems", Toast.LENGTH_SHORT).show()
+                }
+                R.id.nav_runes -> {
+                    Toast.makeText(this, "Runas", Toast.LENGTH_SHORT).show()
+                }
+                R.id.nav_settings -> {
+                    Toast.makeText(this, "Configuración", Toast.LENGTH_SHORT).show()
+                }
+            }
+            drawerLayout.closeDrawer(GravityCompat.START)
+            true
+        }
+
         binding.rvLolChampsList.layoutManager = GridLayoutManager(this, 4)
 
         loadChampions()
@@ -49,6 +80,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupToolbar() {
+        binding.btnMenu.setOnClickListener {
+            drawerLayout.openDrawer(GravityCompat.START)
+        }
         binding.btnSearch.setOnClickListener {
 
             binding.ivSearch.visibility = View.GONE
@@ -60,7 +94,8 @@ class MainActivity : AppCompatActivity() {
             binding.sbvChampsLol.visibility = View.VISIBLE
 
 
-            val editText = binding.sbvChampsLol.findViewById<EditText>(com.ignite.material.searchbarview.R.id.editTextSearch)
+            val editText =
+                binding.sbvChampsLol.findViewById<EditText>(com.ignite.material.searchbarview.R.id.editTextSearch)
             editText.requestFocus()
             val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT)
@@ -68,30 +103,30 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupBackPressHandler() {
-        // Creamos un callback que se ejecuta al pulsar atrás
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                if (binding.sbvChampsLol.visibility == View.VISIBLE) {
-                    // Si la SearchBar está visible, la ocultamos
-                    binding.sbvChampsLol.visibility = View.GONE
+                when {
+                    drawerLayout.isDrawerOpen(GravityCompat.START) -> {
+                        drawerLayout.closeDrawer(GravityCompat.START)
+                    }
+                    binding.sbvChampsLol.visibility == View.VISIBLE -> {
+                        binding.sbvChampsLol.visibility = View.GONE
+                        binding.ivSearch.visibility = View.VISIBLE
+                        binding.btnMenu.visibility = View.VISIBLE
+                        binding.ivMenu.visibility = View.VISIBLE
+                        binding.tvTitle.visibility = View.VISIBLE
+                        binding.btnSearch.visibility = View.VISIBLE
 
-                    // Restauramos la Toolbar
-                    binding.ivSearch.visibility = View.VISIBLE
-                    binding.btnMenu.visibility = View.VISIBLE
-                    binding.ivMenu.visibility = View.VISIBLE
-                    binding.tvTitle.visibility = View.VISIBLE
-                    binding.btnSearch.visibility = View.VISIBLE
-
-                    // Ocultamos teclado
-                    val editText = binding.sbvChampsLol.findViewById<EditText>(
-                        com.ignite.material.searchbarview.R.id.editTextSearch
-                    )
-                    val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                    imm.hideSoftInputFromWindow(editText.windowToken, 0)
-                } else {
-                    // Si la SearchBar no está visible, dejamos que el sistema maneje el back
-                    isEnabled = false
-                    onBackPressedDispatcher.onBackPressed()
+                        val editText = binding.sbvChampsLol.findViewById<EditText>(
+                            com.ignite.material.searchbarview.R.id.editTextSearch
+                        )
+                        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                        imm.hideSoftInputFromWindow(editText.windowToken, 0)
+                    }
+                    else -> {
+                        isEnabled = false
+                        onBackPressedDispatcher.onBackPressed()
+                    }
                 }
             }
         })
@@ -103,24 +138,24 @@ class MainActivity : AppCompatActivity() {
                 val response = apiService.getChampions()
                 val championList = response.data.values.toList()
 
-                withContext(Dispatchers.Main){
-                    adapter = ChampionAdapter(championList){ id ->
-                        Toast.makeText(this@MainActivity, "Has pulsado $id", Toast.LENGTH_SHORT).show()
+                withContext(Dispatchers.Main) {
+                    adapter = ChampionAdapter(championList) { id ->
+                        Toast.makeText(this@MainActivity, "Has pulsado $id", Toast.LENGTH_SHORT)
+                            .show()
                     }
                     binding.rvLolChampsList.adapter = adapter
                 }
-            } catch (e : Exception) {
-                withContext(Dispatchers.Main){
-                    Toast.makeText(this@MainActivity, "Error: ${e.message}", Toast.LENGTH_LONG).show()
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(this@MainActivity, "Error: ${e.message}", Toast.LENGTH_LONG)
+                        .show()
                 }
             }
         }
     }
 
-    private fun getRetrofit(): Retrofit{
-        return Retrofit.Builder()
-            .baseUrl("https://ddragon.leagueoflegends.com/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
+    private fun getRetrofit(): Retrofit {
+        return Retrofit.Builder().baseUrl("https://ddragon.leagueoflegends.com/")
+            .addConverterFactory(GsonConverterFactory.create()).build()
     }
 }
