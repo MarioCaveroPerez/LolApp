@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.FragmentContainerView
+import com.example.lolapp.Data.Skins
 import com.example.lolapp.GeneralFragment
 import com.example.lolapp.HabilidadesFragment
 import com.example.lolapp.LoreFragment
@@ -30,19 +31,23 @@ class DetailChampionsActivity : AppCompatActivity() {
     private lateinit var retrofit: Retrofit
     private lateinit var apiService: ApiService
 
+    private var currentChampionId: String? = null
+    private var currentChampionSkins = emptyList<com.example.lolapp.Data.Skins>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityDetailChampionsBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
         retrofit = getRetrofit()
         apiService = retrofit.create(ApiService::class.java)
 
         val championId = intent.getStringExtra("champion_id")
         if (championId != null) {
             loadChampionDetail(championId)
+        } else {
+            Toast.makeText(this, "No se recibió el campeón", Toast.LENGTH_SHORT).show()
         }
-
-        setupTabs()
     }
 
     private fun loadChampionDetail(championId: String) {
@@ -52,20 +57,31 @@ class DetailChampionsActivity : AppCompatActivity() {
                 val champion = response.data[championId]!!
 
                 withContext(Dispatchers.Main) {
+                    currentChampionId = champion.id
+                    currentChampionSkins = champion.skins
+
                     binding.tvChampionName.text = champion.name
                     binding.tvChampionTitle.text = champion.title
 
-                    val splashUrl = "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/${champion.id}_0.jpg"
+                    val splashUrl =
+                        "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/${champion.id}_0.jpg"
+
                     Picasso.get()
                         .load(splashUrl)
                         .fit()
                         .centerCrop()
                         .into(binding.ivSplashArt)
+
+                    setupTabs()
                 }
 
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
-                    Toast.makeText(this@DetailChampionsActivity, "Error: ${e.message}", Toast.LENGTH_LONG).show()
+                    Toast.makeText(
+                        this@DetailChampionsActivity,
+                        "Error: ${e.message}",
+                        Toast.LENGTH_LONG
+                    ).show()
                 }
             }
         }
@@ -77,20 +93,25 @@ class DetailChampionsActivity : AppCompatActivity() {
             binding.tabLayoutChampion.addTab(binding.tabLayoutChampion.newTab().setText(tabName))
         }
 
+        // Cargar fragment inicial
         supportFragmentManager.beginTransaction()
             .replace(R.id.fragmentContainerChampion, GeneralFragment())
             .commit()
 
-        binding.tabLayoutChampion.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+        binding.tabLayoutChampion.addOnTabSelectedListener(object :
+            TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
-                val fragment = when(tab?.position){
+                val fragment = when (tab?.position) {
                     0 -> GeneralFragment()
                     1 -> HabilidadesFragment()
                     2 -> {
-                        // Aquí pasamos la lista de skins al fragment
                         SkinsFragment().apply {
                             arguments = Bundle().apply {
-                                putParcelableArrayList("skins_list", ArrayList(champion.skins))
+                                putString("champion_id", currentChampionId)
+                                putParcelableArrayList(
+                                    "skins_list",
+                                    ArrayList(currentChampionSkins)
+                                )
                             }
                         }
                     }
@@ -106,8 +127,11 @@ class DetailChampionsActivity : AppCompatActivity() {
             override fun onTabReselected(tab: TabLayout.Tab?) {}
         })
     }
+
     private fun getRetrofit(): Retrofit {
-        return Retrofit.Builder().baseUrl("https://ddragon.leagueoflegends.com/")
-            .addConverterFactory(GsonConverterFactory.create()).build()
+        return Retrofit.Builder()
+            .baseUrl("https://ddragon.leagueoflegends.com/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
     }
 }

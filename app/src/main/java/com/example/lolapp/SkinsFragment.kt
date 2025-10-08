@@ -10,30 +10,37 @@ import com.example.lolapp.Adapters.SkinsAdapter
 import com.example.lolapp.Data.Skins
 import com.example.lolapp.databinding.FragmentSkinsBinding
 
-class SkinsFragment(private val championId: String, private val skins: List<Skins>) : Fragment() {
+
+class SkinsFragment : Fragment() {
 
     private var _binding: FragmentSkinsBinding? = null
     private val binding get() = _binding!!
 
+    private var championId: String? = null
+    private var skins: List<Skins> = emptyList()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        arguments?.let {
+            championId = it.getString("champion_id")
+            skins = it.getParcelableArrayList<Skins>("skins_list") ?: emptyList()
+        }
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        _binding = FragmentSkinsBinding.inflate(layoutInflater, container, false)
-
-        // Configurar RecyclerView
-        binding.rvSkins.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-        binding.rvSkins.adapter = SkinsAdapter(skins)
-
+    ): View {
+        _binding = FragmentSkinsBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         binding.rvSkins.layoutManager =
-            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-        binding.rvSkins.adapter = SkinsAdapter(skins)
+            LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+        binding.rvSkins.adapter = SkinsAdapter(championId ?: "", skins)
     }
 
     override fun onDestroyView() {
