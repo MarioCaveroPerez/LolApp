@@ -103,7 +103,11 @@ class DetailChampionsActivity : AppCompatActivity() {
             override fun onTabSelected(tab: TabLayout.Tab?) {
                 val fragment = when (tab?.position) {
                     0 -> GeneralFragment()
-                    1 -> HabilidadesFragment()
+                    1 -> HabilidadesFragment().apply {
+                        arguments = Bundle().apply {
+                            putString("champion_id", currentChampionId)
+                        }
+                    }
                     2 -> {
                         SkinsFragment().apply {
                             arguments = Bundle().apply {

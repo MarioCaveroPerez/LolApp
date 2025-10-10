@@ -5,55 +5,87 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.lolapp.Adapters.SpellsAdapter
+import com.example.lolapp.Data.SpellItem
+import com.example.lolapp.Data.SpellApi
+import com.example.lolapp.Data.ChampionWithSpells
+import com.example.lolapp.Data.ChampionDetailWithSpellsResponse
+import com.example.lolapp.Utils.ApiService
+import com.example.lolapp.databinding.FragmentHabilidadesBinding
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [HabilidadesFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class HabilidadesFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
+    private var _binding: FragmentHabilidadesBinding? = null
+    private val binding get() = _binding!!
+    private lateinit var spellsAdapter: SpellsAdapter
+
+    private val apiService: ApiService by lazy {
+        Retrofit.Builder()
+            .baseUrl("https://ddragon.leagueoflegends.com/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(ApiService::class.java)
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_habilidades, container, false)
+    ): View {
+        _binding = FragmentHabilidadesBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment HabilidadesFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            HabilidadesFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        val championId = arguments?.getString("champion_id") ?: return
+
+        spellsAdapter = SpellsAdapter(listOf())
+        binding.rvSpells.apply {
+            layoutManager = LinearLayoutManager(requireContext())
+            adapter = spellsAdapter
+        }
+
+        fetchChampionSpells(championId)
+    }
+
+    private fun fetchChampionSpells(championId: String) {
+        lifecycleScope.launch {
+            try {
+                val response: ChampionDetailWithSpellsResponse = withContext(Dispatchers.IO) {
+                    apiService.getChampionDetails(championId)
                 }
+
+                val champion: ChampionWithSpells = response.data[championId]!!
+
+                val spells: List<SpellItem> = champion.spells.map { spellApi: SpellApi ->
+                    SpellItem(
+                        id = spellApi.id,
+                        name = spellApi.name,
+                        description = spellApi.description,
+                        cost = spellApi.cost.joinToString(", "),
+                        image = spellApi.image
+                    )
+                }
+
+                spellsAdapter = SpellsAdapter(spells)
+                binding.rvSpells.adapter = spellsAdapter
+
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
+        }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }
