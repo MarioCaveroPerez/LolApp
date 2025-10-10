@@ -66,11 +66,14 @@ class HabilidadesFragment : Fragment() {
                 val champion: ChampionWithSpells = response.data[championId]!!
 
                 val spells: List<SpellItem> = champion.spells.map { spellApi: SpellApi ->
+                    val descriptionClean = spellApi.description.replace("<br>", "\n")
+                    val costClean = if (spellApi.cost.all { it == "0" }) "Sin Coste" else spellApi.cost.joinToString(", ")
+
                     SpellItem(
                         id = spellApi.id,
                         name = spellApi.name,
-                        description = spellApi.description,
-                        cost = spellApi.cost.joinToString(", "),
+                        description = descriptionClean,
+                        cost = costClean,
                         image = spellApi.image
                     )
                 }
