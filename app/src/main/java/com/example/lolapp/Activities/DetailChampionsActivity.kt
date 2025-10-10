@@ -119,7 +119,11 @@ class DetailChampionsActivity : AppCompatActivity() {
                             }
                         }
                     }
-                    3 -> LoreFragment()
+                    3 -> LoreFragment().apply {
+                        arguments = Bundle().apply {
+                            putString("champion_id", currentChampionId)
+                        }
+                    }
                     else -> GeneralFragment()
                 }
                 supportFragmentManager.beginTransaction()

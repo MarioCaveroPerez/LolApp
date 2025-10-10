@@ -10,7 +10,8 @@ import com.example.lolapp.Data.SpellItem
 import com.example.lolapp.R
 import com.squareup.picasso.Picasso
 
-class SpellsAdapter(private val spellsList: List<SpellItem>) :
+class SpellsAdapter(private val spellsList: List<SpellItem>,
+                    private val version: String) :
     RecyclerView.Adapter<SpellsAdapter.SpellViewHolder>() {
 
     inner class SpellViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -34,9 +35,9 @@ class SpellsAdapter(private val spellsList: List<SpellItem>) :
         holder.tvSpellDescription.text = spell.description
 
         val imageUrl = if (spell.id == "passive") {
-            "https://ddragon.leagueoflegends.com/cdn/15.19.1/img/passive/${spell.image.full}"
+            "https://ddragon.leagueoflegends.com/cdn/$version/img/passive/${spell.image.full}"
         } else {
-            "https://ddragon.leagueoflegends.com/cdn/15.19.1/img/spell/${spell.image.full}"
+            "https://ddragon.leagueoflegends.com/cdn/$version/img/spell/${spell.image.full}"
         }
         Picasso.get().load(imageUrl).into(holder.ivSpellImage)
     }

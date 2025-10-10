@@ -47,7 +47,7 @@ class HabilidadesFragment : Fragment() {
 
         val championId = arguments?.getString("champion_id") ?: return
 
-        spellsAdapter = SpellsAdapter(listOf())
+        spellsAdapter = SpellsAdapter(listOf(), "latest")
         binding.rvSpells.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = spellsAdapter
@@ -59,6 +59,10 @@ class HabilidadesFragment : Fragment() {
     private fun fetchChampionSpells(championId: String) {
         lifecycleScope.launch {
             try {
+                val latestVersion = withContext(Dispatchers.IO) {
+                    apiService.getVersions()[0]
+                }
+
                 val response: ChampionDetailWithSpellsResponse = withContext(Dispatchers.IO) {
                     apiService.getChampionDetails(championId)
                 }
@@ -69,14 +73,14 @@ class HabilidadesFragment : Fragment() {
                 val spells: List<SpellItem> = listOf(
                     // Pasiva primero
                     SpellItem(
-                        id = champion.passive.id ?: "passive",   // si no tiene id
+                        id = champion.passive.id ?: "passive",
                         name = champion.passive.name,
-                        description = champion.passive.description.replace("<br>", "\n"),
+                        description = cleanDescription(champion.passive.description),
                         cost = "Sin Coste",
                         image = champion.passive.image
                     )
                 ) + champion.spells.map { spellApi ->
-                    val descriptionClean = spellApi.description.replace("<br>", "\n")
+                    val descriptionClean = cleanDescription(spellApi.description)
                     val costClean = if (spellApi.cost.all { it == "0" }) "Sin Coste" else spellApi.cost.joinToString(", ")
 
                     SpellItem(
@@ -88,13 +92,21 @@ class HabilidadesFragment : Fragment() {
                     )
                 }
 
-                spellsAdapter = SpellsAdapter(spells)
+                spellsAdapter = SpellsAdapter(spells, latestVersion)
                 binding.rvSpells.adapter = spellsAdapter
 
             } catch (e: Exception) {
                 e.printStackTrace()
             }
         }
+    }
+
+    private fun cleanDescription(description: String): String {
+        // Reemplaza <br> por salto de línea
+        var text = description.replace("<br>", "\n", ignoreCase = true)
+        // Elimina cualquier cosa entre <>
+        text = text.replace(Regex("<.*?>"), "")
+        return text
     }
 
     override fun onDestroyView() {
