@@ -65,12 +65,22 @@ class HabilidadesFragment : Fragment() {
 
                 val champion: ChampionWithSpells = response.data[championId]!!
 
-                val spells: List<SpellItem> = champion.spells.map { spellApi: SpellApi ->
+
+                val spells: List<SpellItem> = listOf(
+                    // Pasiva primero
+                    SpellItem(
+                        id = champion.passive.id ?: "passive",   // si no tiene id
+                        name = champion.passive.name,
+                        description = champion.passive.description.replace("<br>", "\n"),
+                        cost = "Sin Coste",
+                        image = champion.passive.image
+                    )
+                ) + champion.spells.map { spellApi ->
                     val descriptionClean = spellApi.description.replace("<br>", "\n")
                     val costClean = if (spellApi.cost.all { it == "0" }) "Sin Coste" else spellApi.cost.joinToString(", ")
 
                     SpellItem(
-                        id = spellApi.id,
+                        id = spellApi.id ?: "",
                         name = spellApi.name,
                         description = descriptionClean,
                         cost = costClean,

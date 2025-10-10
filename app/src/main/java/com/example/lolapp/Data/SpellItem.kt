@@ -16,14 +16,15 @@ data class SpellImage(
 data class ChampionWithSpells(
     val id: String,
     val name: String,
+    val passive: SpellApi,
     val spells: List<SpellApi>
 )
 
 data class SpellApi(
-    val id: String,
+    val id: String? = null,
     val name: String,
     val description: String,
-    val cost: List<String>,
+    val cost: List<String> = listOf(),
     val image: SpellImage
 )
 
