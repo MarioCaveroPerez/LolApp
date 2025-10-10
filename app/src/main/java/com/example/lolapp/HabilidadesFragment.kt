@@ -47,7 +47,7 @@ class HabilidadesFragment : Fragment() {
 
         val championId = arguments?.getString("champion_id") ?: return
 
-        spellsAdapter = SpellsAdapter(listOf(), "latest")
+        spellsAdapter = SpellsAdapter(listOf())
         binding.rvSpells.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = spellsAdapter
@@ -59,9 +59,6 @@ class HabilidadesFragment : Fragment() {
     private fun fetchChampionSpells(championId: String) {
         lifecycleScope.launch {
             try {
-                val latestVersion = withContext(Dispatchers.IO) {
-                    apiService.getVersions()[0]
-                }
 
                 val response: ChampionDetailWithSpellsResponse = withContext(Dispatchers.IO) {
                     apiService.getChampionDetails(championId)
@@ -92,7 +89,7 @@ class HabilidadesFragment : Fragment() {
                     )
                 }
 
-                spellsAdapter = SpellsAdapter(spells, latestVersion)
+                spellsAdapter = SpellsAdapter(spells)
                 binding.rvSpells.adapter = spellsAdapter
 
             } catch (e: Exception) {
