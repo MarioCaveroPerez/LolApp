@@ -12,18 +12,6 @@
         android:gravity="center_horizontal"
         android:orientation="vertical">
 
-        <!-- Título -->
-        <TextView
-            android:id="@+id/tvStatsTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:fontFamily="@font/quicksand_regular"
-            android:text="@string/estad_sticas_del_campe_n"
-            android:textColor="@color/gold"
-            android:textSize="22sp"
-            android:textStyle="bold" />
-
         <!-- Contenedor de stats -->
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"

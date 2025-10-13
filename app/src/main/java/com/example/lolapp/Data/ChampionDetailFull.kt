@@ -1,5 +1,8 @@
 package com.example.lolapp.Data
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
 data class ChampionDetailFull(
     val id: String,
     val name: String,
@@ -38,6 +41,8 @@ data class ChampionDetailWithStatsResponse(
 )
 
 // Clase UI para mostrar en fragment
+@Parcelize
+
 data class ChampionStatsUI(
     val hp: Double,
     val hpPerLevel: Double,
@@ -57,4 +62,4 @@ data class ChampionStatsUI(
     val defense: Int,
     val magic: Int,
     val difficulty: Int
-)
+) : Parcelable

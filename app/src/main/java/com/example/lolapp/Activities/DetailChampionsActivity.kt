@@ -2,11 +2,7 @@ package com.example.lolapp.Activities
 
 import android.os.Bundle
 import android.widget.Toast
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.fragment.app.FragmentContainerView
 import com.example.lolapp.Data.Skins
 import com.example.lolapp.GeneralFragment
 import com.example.lolapp.HabilidadesFragment
@@ -27,12 +23,11 @@ import retrofit2.converter.gson.GsonConverterFactory
 class DetailChampionsActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityDetailChampionsBinding
-
     private lateinit var retrofit: Retrofit
     private lateinit var apiService: ApiService
 
     private var currentChampionId: String? = null
-    private var currentChampionSkins = emptyList<com.example.lolapp.Data.Skins>()
+    private var currentChampionSkins = emptyList<Skins>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,12 +60,19 @@ class DetailChampionsActivity : AppCompatActivity() {
 
                     val splashUrl =
                         "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/${champion.id}_0.jpg"
+                    Picasso.get().load(splashUrl).fit().centerCrop().into(binding.ivSplashArt)
 
-                    Picasso.get()
-                        .load(splashUrl)
-                        .fit()
-                        .centerCrop()
-                        .into(binding.ivSplashArt)
+                    // Cargar el fragment inicial con champion_id
+                    supportFragmentManager.beginTransaction()
+                        .replace(
+                            R.id.fragmentContainerChampion,
+                            GeneralFragment().apply {
+                                arguments = Bundle().apply {
+                                    putString("champion_id", currentChampionId)
+                                }
+                            }
+                        )
+                        .commit()
 
                     setupTabs()
                 }
@@ -79,7 +81,7 @@ class DetailChampionsActivity : AppCompatActivity() {
                 withContext(Dispatchers.Main) {
                     Toast.makeText(
                         this@DetailChampionsActivity,
-                        "Error: ${e.message}",
+                        "Error al cargar datos: ${e.message}",
                         Toast.LENGTH_LONG
                     ).show()
                 }
@@ -93,43 +95,29 @@ class DetailChampionsActivity : AppCompatActivity() {
             binding.tabLayoutChampion.addTab(binding.tabLayoutChampion.newTab().setText(tabName))
         }
 
-        // Cargar fragment inicial
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.fragmentContainerChampion, GeneralFragment())
-            .commit()
-
-        binding.tabLayoutChampion.addOnTabSelectedListener(object :
-            TabLayout.OnTabSelectedListener {
+        binding.tabLayoutChampion.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
                 val fragment = when (tab?.position) {
                     0 -> GeneralFragment().apply {
-                        arguments = Bundle().apply {
-                            putString("champion_id", currentChampionId)
-                        }
+                        arguments = Bundle().apply { putString("champion_id", currentChampionId) }
                     }
                     1 -> HabilidadesFragment().apply {
+                        arguments = Bundle().apply { putString("champion_id", currentChampionId) }
+                    }
+                    2 -> SkinsFragment().apply {
                         arguments = Bundle().apply {
                             putString("champion_id", currentChampionId)
-                        }
-                    }
-                    2 -> {
-                        SkinsFragment().apply {
-                            arguments = Bundle().apply {
-                                putString("champion_id", currentChampionId)
-                                putParcelableArrayList(
-                                    "skins_list",
-                                    ArrayList(currentChampionSkins)
-                                )
-                            }
+                            putParcelableArrayList("skins_list", ArrayList(currentChampionSkins))
                         }
                     }
                     3 -> LoreFragment().apply {
-                        arguments = Bundle().apply {
-                            putString("champion_id", currentChampionId)
-                        }
+                        arguments = Bundle().apply { putString("champion_id", currentChampionId) }
                     }
-                    else -> GeneralFragment()
+                    else -> GeneralFragment().apply {
+                        arguments = Bundle().apply { putString("champion_id", currentChampionId) }
+                    }
                 }
+
                 supportFragmentManager.beginTransaction()
                     .replace(R.id.fragmentContainerChampion, fragment)
                     .commit()

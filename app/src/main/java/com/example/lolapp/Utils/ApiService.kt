@@ -10,10 +10,6 @@ import retrofit2.http.Path
 
 
 interface ApiService {
-
-        @GET("api/versions.json")
-        suspend fun getVersions(): List<String>
-
         @GET("cdn/15.19.1/data/es_ES/champion.json")
         suspend fun getChampions(): ChampionsResponse
 
