@@ -16,6 +16,7 @@
     <string name="estad_sticas_del_campe_n">Estadísticas del Campeón</string>
     <string name="stats">Stats</string>
     <string name="version">1.0</string>
+    <string name="ITEMS">ITEMS</string>
 
     <string-array name="languages">
         <item>Español</item>

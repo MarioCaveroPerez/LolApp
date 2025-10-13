@@ -52,11 +52,10 @@ class MainActivity : AppCompatActivity() {
 
         navView.setNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
-                R.id.nav_champ -> {
-                    Toast.makeText(this, "Campeones", Toast.LENGTH_SHORT).show()
-                }
+                R.id.nav_champ -> {}
                 R.id.nav_items -> {
-                    Toast.makeText(this, "Ítems", Toast.LENGTH_SHORT).show()
+                    val intent = Intent(this, ItemsActivity::class.java)
+                    startActivity(intent)
                 }
                 R.id.nav_runes -> {
                     Toast.makeText(this, "Runas", Toast.LENGTH_SHORT).show()
