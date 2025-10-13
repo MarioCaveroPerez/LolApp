@@ -43,6 +43,11 @@
                 android:textColor="@color/white"
                 android:textSize="16sp" />
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/white"
+                android:layout_marginVertical="8dp"/>
             <!-- Funcionalidades -->
             <TextView
                 android:id="@+id/tvFeaturesTitle"
@@ -65,6 +70,11 @@
                 android:textColor="@color/white"
                 android:textSize="15sp" />
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/white"
+                android:layout_marginVertical="8dp"/>
             <!-- Créditos -->
             <TextView
                 android:id="@+id/tvCreditsTitle"
@@ -87,6 +97,11 @@
                 android:textColor="@color/white"
                 android:textSize="15sp" />
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/white"
+                android:layout_marginVertical="8dp"/>
             <!-- Contacto -->
             <TextView
                 android:id="@+id/tvContactTitle"

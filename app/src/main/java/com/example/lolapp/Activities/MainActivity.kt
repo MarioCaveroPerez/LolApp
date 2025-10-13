@@ -62,7 +62,8 @@ class MainActivity : AppCompatActivity() {
                     Toast.makeText(this, "Runas", Toast.LENGTH_SHORT).show()
                 }
                 R.id.nav_settings -> {
-                    Toast.makeText(this, "Configuración", Toast.LENGTH_SHORT).show()
+                    val intent = Intent(this, SettingsActivity::class.java)
+                    startActivity(intent)
                 }
                 R.id.info -> {
                     val intent = Intent(this, InfoActivity::class.java)
