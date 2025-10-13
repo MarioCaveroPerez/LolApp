@@ -1,4 +1,4 @@
-package com.example.lolapp
+package com.example.lolapp.Fragments
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -9,7 +9,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.lolapp.Adapters.SpellsAdapter
 import com.example.lolapp.Data.SpellItem
-import com.example.lolapp.Data.SpellApi
 import com.example.lolapp.Data.ChampionWithSpells
 import com.example.lolapp.Data.ChampionDetailWithSpellsResponse
 import com.example.lolapp.Utils.ApiService

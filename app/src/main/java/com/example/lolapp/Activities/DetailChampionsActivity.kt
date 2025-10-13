@@ -4,11 +4,11 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.lolapp.Data.Skins
-import com.example.lolapp.GeneralFragment
-import com.example.lolapp.HabilidadesFragment
-import com.example.lolapp.LoreFragment
+import com.example.lolapp.Fragments.GeneralFragment
+import com.example.lolapp.Fragments.HabilidadesFragment
+import com.example.lolapp.Fragments.LoreFragment
 import com.example.lolapp.R
-import com.example.lolapp.SkinsFragment
+import com.example.lolapp.Fragments.SkinsFragment
 import com.example.lolapp.Utils.ApiService
 import com.example.lolapp.databinding.ActivityDetailChampionsBinding
 import com.google.android.material.tabs.TabLayout

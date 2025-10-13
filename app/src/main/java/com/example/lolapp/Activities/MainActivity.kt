@@ -1,28 +1,20 @@
-package com.example.lolapp
+package com.example.lolapp.Activities
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
-import android.widget.ImageView
-import android.widget.StackView
 import android.widget.Toast
-import android.widget.Toolbar
 import androidx.activity.OnBackPressedCallback
-import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.core.widget.doOnTextChanged
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.GridLayoutManager
-import com.example.lolapp.Activities.DetailChampionsActivity
 import com.example.lolapp.Adapters.ChampionAdapter
 import com.example.lolapp.Data.Champion
+import com.example.lolapp.R
 import com.example.lolapp.Utils.ApiService
 import com.example.lolapp.databinding.ActivityMainBinding
 import com.google.android.material.navigation.NavigationView
@@ -72,6 +64,10 @@ class MainActivity : AppCompatActivity() {
                 R.id.nav_settings -> {
                     Toast.makeText(this, "Configuración", Toast.LENGTH_SHORT).show()
                 }
+                R.id.info -> {
+                    val intent = Intent(this, InfoActivity::class.java)
+                    startActivity(intent)
+                }
             }
             drawerLayout.closeDrawer(GravityCompat.START)
             true
@@ -110,7 +106,7 @@ class MainActivity : AppCompatActivity() {
                 adapter.updateList(filteredList)
             }
 
-            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
             imm.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT)
         }
 
@@ -142,7 +138,7 @@ class MainActivity : AppCompatActivity() {
                         val editText = binding.sbvChampsLol.findViewById<EditText>(
                             com.ignite.material.searchbarview.R.id.editTextSearch
                         )
-                        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                        val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
                         imm.hideSoftInputFromWindow(editText.windowToken, 0)
                     }
                     else -> {
@@ -163,10 +159,10 @@ class MainActivity : AppCompatActivity() {
                 withContext(Dispatchers.Main) {
                     allChampions = championList
                     adapter = ChampionAdapter(allChampions) { championId ->
-                    val intent = Intent(this@MainActivity, DetailChampionsActivity::class.java)
-                    intent.putExtra("champion_id", championId)
-                    startActivity(intent)
-                }
+                        val intent = Intent(this@MainActivity, DetailChampionsActivity::class.java)
+                        intent.putExtra("champion_id", championId)
+                        startActivity(intent)
+                    }
                     binding.rvLolChampsList.adapter = adapter
                 }
             } catch (e: Exception) {

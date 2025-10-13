@@ -6,4 +6,5 @@
     <color name="red">#FF0000</color>
     <color name="background_main">#891C1F37</color>
     <color name="gold">#DBB110</color>
+    <color name="red_background">#38FF0000</color>
 </resources>
