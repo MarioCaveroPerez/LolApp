@@ -34,13 +34,15 @@ class GeneralFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         championId = arguments?.getString("champion_id")
 
-        apiService = Retrofit.Builder()
+        val retrofit = Retrofit.Builder()
             .baseUrl("https://ddragon.leagueoflegends.com/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
-            .create(ApiService::class.java)
+
+        apiService = retrofit.create(ApiService::class.java)
 
         championId?.let { fetchChampionStats(it) }
     }
@@ -53,6 +55,7 @@ class GeneralFragment : Fragment() {
 
                 val champion = response.data[championId]!!
 
+                // Mapear a ChampionStatsUI
                 val stats = ChampionStatsUI(
                     hp = champion.stats.hp,
                     hpPerLevel = champion.stats.hpperlevel,
@@ -85,20 +88,34 @@ class GeneralFragment : Fragment() {
     }
 
     private fun displayStats(stats: ChampionStatsUI) {
+        // Formatear valores con 2 decimales donde sea necesario
         binding.tvHpValue.text = "${stats.hp} - ${stats.hp + stats.hpPerLevel * 17}"
         binding.tvMpValue.text = "${stats.mp} - ${stats.mp + stats.mpPerLevel * 17}"
-        binding.tvAttackDamageValue.text = "${stats.attackDamage} - ${stats.attackDamage + stats.attackDamagePerLevel * 17}"
-        binding.tvAttackSpeedValue.text = String.format("%.2f", stats.attackSpeed * (1 + stats.attackSpeedPerLevel * 17 / 100))
-        binding.tvArmorValue.text = "${stats.armor} - ${stats.armor + stats.armorPerLevel * 17}"
-        binding.tvMagicResistValue.text = "${stats.spellBlock} - ${stats.spellBlock + stats.spellBlockPerLevel * 17}"
+        binding.tvAttackDamageValue.text =
+            "${stats.attackDamage} - ${stats.attackDamage + stats.attackDamagePerLevel * 17}"
+
+        // Attack Speed con 2 decimales
+        val attackSpeed = stats.attackSpeed * (1 + stats.attackSpeedPerLevel * 17 / 100)
+        binding.tvAttackSpeedValue.text = String.format("%.2f", attackSpeed)
+
+        // Armor y SpellBlock con 2 decimales
+        val armorMax = stats.armor + stats.armorPerLevel * 17
+        binding.tvArmorValue.text = "${stats.armor} - ${String.format("%.2f", armorMax)}"
+
+        val spellBlockMax = stats.spellBlock + stats.spellBlockPerLevel * 17
+        binding.tvMagicResistValue.text = "${stats.spellBlock} - ${String.format("%.2f", spellBlockMax)}"
+
+        // Valores enteros
         binding.tvRangeValue.text = stats.attackRange.toString()
         binding.tvMoveSpeedValue.text = stats.moveSpeed.toString()
 
+        // ProgressBars (valores entre 0-10)
         binding.pbAttack.progress = stats.attack
         binding.pbDefense.progress = stats.defense
         binding.pbMagic.progress = stats.magic
         binding.pbDifficulty.progress = stats.difficulty
     }
+
 
     override fun onDestroyView() {
         super.onDestroyView()
