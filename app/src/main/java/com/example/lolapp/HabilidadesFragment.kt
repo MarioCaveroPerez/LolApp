@@ -61,7 +61,7 @@ class HabilidadesFragment : Fragment() {
             try {
 
                 val response: ChampionDetailWithSpellsResponse = withContext(Dispatchers.IO) {
-                    apiService.getChampionDetails(championId)
+                    apiService.getChampionDetailsWithSpells(championId)
                 }
 
                 val champion: ChampionWithSpells = response.data[championId]!!

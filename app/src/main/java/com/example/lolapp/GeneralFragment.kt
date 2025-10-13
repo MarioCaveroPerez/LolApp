@@ -5,55 +5,103 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.example.lolapp.Data.ChampionDetailWithStatsResponse
+import com.example.lolapp.Data.ChampionStatsUI
+import com.example.lolapp.Utils.ApiService
+import com.example.lolapp.databinding.FragmentGeneralBinding
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [GeneralFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class GeneralFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+    private var _binding: FragmentGeneralBinding? = null
+    private val binding get() = _binding!!
+
+    private lateinit var apiService: ApiService
+    private var championId: String? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_general, container, false)
+    ): View {
+        _binding = FragmentGeneralBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment GeneralFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            GeneralFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        championId = arguments?.getString("champion_id")
+
+        apiService = Retrofit.Builder()
+            .baseUrl("https://ddragon.leagueoflegends.com/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(ApiService::class.java)
+
+        championId?.let { fetchChampionStats(it) }
+    }
+
+    private fun fetchChampionStats(championId: String) {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val response: ChampionDetailWithStatsResponse =
+                    apiService.getChampionDetailsWithStats(championId)
+
+                val champion = response.data[championId]!!
+
+                val stats = ChampionStatsUI(
+                    hp = champion.stats.hp,
+                    hpPerLevel = champion.stats.hpperlevel,
+                    mp = champion.stats.mp,
+                    mpPerLevel = champion.stats.mpperlevel,
+                    attackDamage = champion.stats.attackdamage,
+                    attackDamagePerLevel = champion.stats.attackdamageperlevel,
+                    attackSpeed = champion.stats.attackspeed.toFloat(),
+                    attackSpeedPerLevel = champion.stats.attackspeedperlevel.toFloat(),
+                    armor = champion.stats.armor.toInt(),
+                    armorPerLevel = champion.stats.armorperlevel.toFloat(),
+                    spellBlock = champion.stats.spellblock.toInt(),
+                    spellBlockPerLevel = champion.stats.spellblockperlevel.toFloat(),
+                    attackRange = champion.stats.attackrange,
+                    moveSpeed = champion.stats.movespeed,
+                    attack = champion.info.attack,
+                    defense = champion.info.defense,
+                    magic = champion.info.magic,
+                    difficulty = champion.info.difficulty
+                )
+
+                withContext(Dispatchers.Main) {
+                    displayStats(stats)
                 }
+
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
+        }
+    }
+
+    private fun displayStats(stats: ChampionStatsUI) {
+        binding.tvHpValue.text = "${stats.hp} - ${stats.hp + stats.hpPerLevel * 17}"
+        binding.tvMpValue.text = "${stats.mp} - ${stats.mp + stats.mpPerLevel * 17}"
+        binding.tvAttackDamageValue.text = "${stats.attackDamage} - ${stats.attackDamage + stats.attackDamagePerLevel * 17}"
+        binding.tvAttackSpeedValue.text = String.format("%.2f", stats.attackSpeed * (1 + stats.attackSpeedPerLevel * 17 / 100))
+        binding.tvArmorValue.text = "${stats.armor} - ${stats.armor + stats.armorPerLevel * 17}"
+        binding.tvMagicResistValue.text = "${stats.spellBlock} - ${stats.spellBlock + stats.spellBlockPerLevel * 17}"
+        binding.tvRangeValue.text = stats.attackRange.toString()
+        binding.tvMoveSpeedValue.text = stats.moveSpeed.toString()
+
+        binding.pbAttack.progress = stats.attack
+        binding.pbDefense.progress = stats.defense
+        binding.pbMagic.progress = stats.magic
+        binding.pbDifficulty.progress = stats.difficulty
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }
