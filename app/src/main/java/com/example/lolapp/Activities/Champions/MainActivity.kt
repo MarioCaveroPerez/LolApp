@@ -1,4 +1,4 @@
-package com.example.lolapp.Activities
+package com.example.lolapp.Activities.Champions
 
 import android.content.Intent
 import android.os.Bundle
@@ -12,6 +12,10 @@ import androidx.core.view.GravityCompat
 import androidx.core.widget.doOnTextChanged
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.GridLayoutManager
+import com.example.lolapp.Activities.Champions.DetailChampions.DetailChampionsActivity
+import com.example.lolapp.Activities.Info.InfoActivity
+import com.example.lolapp.Activities.Items.ItemsActivity
+import com.example.lolapp.Activities.Settings.SettingsActivity
 import com.example.lolapp.Adapters.ChampionAdapter
 import com.example.lolapp.Data.Champion
 import com.example.lolapp.R

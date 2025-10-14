@@ -1,4 +1,4 @@
-package com.example.lolapp.Activities
+package com.example.lolapp.Activities.Items
 
 import android.content.Intent
 import android.os.Bundle
@@ -12,11 +12,12 @@ import androidx.core.view.GravityCompat
 import androidx.core.widget.doOnTextChanged
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.GridLayoutManager
-import com.example.lolapp.Adapters.ChampionAdapter
+import com.example.lolapp.Activities.Champions.DetailChampions.DetailChampionsActivity
+import com.example.lolapp.Activities.Champions.MainActivity
+import com.example.lolapp.Activities.Info.InfoActivity
+import com.example.lolapp.Activities.Settings.SettingsActivity
 import com.example.lolapp.Adapters.ItemAdapter
-import com.example.lolapp.Data.Champion
 import com.example.lolapp.Data.Item
-import com.example.lolapp.Data.ItemsResponse
 import com.example.lolapp.R
 import com.example.lolapp.Utils.ApiService
 import com.example.lolapp.databinding.ActivityItemsBinding
@@ -162,7 +163,8 @@ class ItemsActivity : AppCompatActivity() {
                     withContext(Dispatchers.Main) {
                         allItems = itemList
                         adapter = ItemAdapter(allItems) { itemName ->
-                            val intent = Intent(this@ItemsActivity, DetailChampionsActivity::class.java)
+                            val intent =
+                                Intent(this@ItemsActivity, DetailChampionsActivity::class.java)
                             intent.putExtra("item_name", itemName)
                             startActivity(intent)
                         }

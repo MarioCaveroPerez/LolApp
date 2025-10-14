@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:layout_width="match_parent"
     tools:openDrawer="start"
-    tools:context=".Activities.MainActivity">
+    tools:context=".Activities.Champions.MainActivity">
 
 
     <androidx.constraintlayout.widget.ConstraintLayout

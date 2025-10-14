@@ -1,4 +1,4 @@
-package com.example.lolapp.Fragments
+package com.example.lolapp.Activities.Champions.DetailChampions.Fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater

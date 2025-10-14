@@ -1,4 +1,4 @@
-package com.example.lolapp.Activities
+package com.example.lolapp.Activities.Settings
 
 import android.content.Intent
 import android.net.Uri

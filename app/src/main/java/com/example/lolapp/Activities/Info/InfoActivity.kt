@@ -1,8 +1,7 @@
-package com.example.lolapp.Activities
+package com.example.lolapp.Activities.Info
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.example.lolapp.R
 import com.example.lolapp.databinding.ActivityInfoBinding
 
 class InfoActivity : AppCompatActivity() {

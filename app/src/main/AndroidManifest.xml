@@ -17,28 +17,28 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.LolApp">
         <activity
-            android:name=".Activities.SettingsActivity"
+            android:name=".Activities.Settings.SettingsActivity"
             android:exported="false" />
         <activity
-            android:name=".Activities.InfoActivity"
+            android:name=".Activities.Info.InfoActivity"
             android:exported="false" />
         <activity
             android:name=".Activities.RunesDetailActivity"
             android:exported="false" />
         <activity
-            android:name=".Activities.RunesActivity"
+            android:name=".Activities.Runes.RunesActivity"
             android:exported="false" />
         <activity
-            android:name=".Activities.ItemsDetailActivity"
+            android:name=".Activities.Items.ItemsDetail.ItemsDetailActivity"
             android:exported="false" />
         <activity
-            android:name=".Activities.ItemsActivity"
+            android:name=".Activities.Items.ItemsActivity"
             android:exported="false" />
         <activity
-            android:name=".Activities.DetailChampionsActivity"
+            android:name=".Activities.Champions.DetailChampions.DetailChampionsActivity"
             android:exported="false" />
         <activity
-            android:name=".Activities.MainActivity"
+            android:name=".Activities.Champions.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

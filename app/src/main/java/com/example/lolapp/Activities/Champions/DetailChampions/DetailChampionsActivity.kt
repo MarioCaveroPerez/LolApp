@@ -1,14 +1,14 @@
-package com.example.lolapp.Activities
+package com.example.lolapp.Activities.Champions.DetailChampions
 
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.lolapp.Data.Skins
-import com.example.lolapp.Fragments.GeneralFragment
-import com.example.lolapp.Fragments.HabilidadesFragment
-import com.example.lolapp.Fragments.LoreFragment
+import com.example.lolapp.Activities.Champions.DetailChampions.Fragments.GeneralFragment
+import com.example.lolapp.Activities.Champions.DetailChampions.Fragments.HabilidadesFragment
+import com.example.lolapp.Activities.Champions.DetailChampions.Fragments.LoreFragment
+import com.example.lolapp.Activities.Champions.DetailChampions.Fragments.SkinsFragment
 import com.example.lolapp.R
-import com.example.lolapp.Fragments.SkinsFragment
 import com.example.lolapp.Utils.ApiService
 import com.example.lolapp.databinding.ActivityDetailChampionsBinding
 import com.google.android.material.tabs.TabLayout
