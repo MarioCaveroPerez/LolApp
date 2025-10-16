@@ -25,8 +25,8 @@
             <!-- Logo o imagen de la app -->
             <ImageView
                 android:id="@+id/ivAppLogo"
-                android:layout_width="135dp"
-                android:layout_height="135dp"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
                 android:layout_gravity="center"
                 android:contentDescription="Logo de la App"
                 android:src="@mipmap/ic_launcher_foreground" />
