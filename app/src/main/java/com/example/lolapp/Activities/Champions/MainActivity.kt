@@ -28,6 +28,9 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import androidx.core.view.size
+import androidx.core.view.get
+import androidx.core.view.isVisible
 
 class MainActivity : AppCompatActivity() {
 
@@ -56,7 +59,6 @@ class MainActivity : AppCompatActivity() {
 
         navView.setNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
-                R.id.nav_champ -> {}
                 R.id.nav_items -> {
                     val intent = Intent(this, ItemsActivity::class.java)
                     startActivity(intent)
@@ -131,7 +133,7 @@ class MainActivity : AppCompatActivity() {
                     drawerLayout.isDrawerOpen(GravityCompat.START) -> {
                         drawerLayout.closeDrawer(GravityCompat.START)
                     }
-                    binding.sbvChampsLol.visibility == View.VISIBLE -> {
+                    binding.sbvChampsLol.isVisible -> {
                         binding.sbvChampsLol.visibility = View.GONE
                         binding.ivSearch.visibility = View.VISIBLE
                         binding.btnMenu.visibility = View.VISIBLE
@@ -152,6 +154,15 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         })
+    }
+
+    override fun onResume() {
+        super.onResume()
+        binding.navView.menu.setGroupCheckable(0, true, false)
+        for (i in 0 until binding.navView.menu.size) {
+            binding.navView.menu[i].isChecked = false
+        }
+        binding.navView.menu.setGroupCheckable(0, true, true)
     }
 
     private fun loadChampions() {
