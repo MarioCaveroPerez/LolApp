@@ -22,6 +22,17 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
+            <ImageButton
+                android:id="@+id/buttonback"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_margin="12dp"
+                android:src="@drawable/ic_back"
+                app:tint="@color/gold"
+                android:background="@android:color/transparent"/>
+
             <!-- Logo o imagen de la app -->
             <ImageView
                 android:id="@+id/ivAppLogo"

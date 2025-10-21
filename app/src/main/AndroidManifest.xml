@@ -23,9 +23,6 @@
             android:name=".Activities.Info.InfoActivity"
             android:exported="false" />
         <activity
-            android:name=".Activities.RunesDetailActivity"
-            android:exported="false" />
-        <activity
             android:name=".Activities.Runes.RunesActivity"
             android:exported="false" />
         <activity

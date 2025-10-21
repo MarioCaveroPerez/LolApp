@@ -13,5 +13,9 @@ class InfoActivity : AppCompatActivity() {
         binding = ActivityInfoBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        val button = binding.buttonback
+        button.setOnClickListener {
+            onBackPressedDispatcher.onBackPressed()
+        }
     }
 }

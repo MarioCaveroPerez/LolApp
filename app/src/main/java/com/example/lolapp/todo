@@ -1,0 +1,18 @@
+-Flecha para atras en activities (championDetail, info, config)
+-Al cerrar el search view borrar el texto para mostrar la lista completa
+-Crear Base de Datos completa para guardar todos los datos y descargarlos por la version de la bd online (IMPORTANTE)
+-Nav view Modificarlo para mejorar diseño
+-Items, pensar en como listarlos y mostrar su info
+-Pagina de runas, pensar en diseño sencillo
+-Cambiar la pagina info mas especifico y completo
+-Settings hacerlo funcional, importantes funcionalidads => CAMBIAR EL TEMA DE OSCURO A CLARO y CAMBIAR LENGUAJE (ESP | ENG | ...)
+-El nav view al pulsar una opcion se queda marcada MIRAR!!
+-Agregar el dialog para descargar imagen
+-Crear ReadMe.md sobre la app
+-Mirar la estructura del proyecto
+-Cambiar y limpiar codigo, importante que las funciones no tengan mas de xLineas
+
+
+LATE
+-Informarse de como sacar una aplicacion a la playstore
+-Modificar mi Github para poner el repositorio en mi presentacion

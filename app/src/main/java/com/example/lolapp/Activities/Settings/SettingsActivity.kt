@@ -10,8 +10,12 @@ import android.widget.Switch
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.example.lolapp.R
+import com.example.lolapp.databinding.ActivityDetailChampionsBinding
+import com.example.lolapp.databinding.ActivitySettingsBinding
 
 class SettingsActivity : AppCompatActivity() {
+
+    private lateinit var binding: ActivitySettingsBinding
 
     private lateinit var switchTheme: Switch
     private lateinit var spinnerLanguage: Spinner
@@ -20,12 +24,14 @@ class SettingsActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_settings)
 
-        switchTheme = findViewById(R.id.switchTheme)
-        spinnerLanguage = findViewById(R.id.spinnerLanguage)
-        tvAppVersion = findViewById(R.id.tvAppVersion)
-        btnRateApp = findViewById(R.id.btnRateApp)
+        binding = ActivitySettingsBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        switchTheme = binding.switchTheme
+        spinnerLanguage = binding.spinnerLanguage
+        tvAppVersion = binding.tvAppVersion
+        btnRateApp = binding.btnRateApp
 
         // Configurar versión de la app
         val versionName = packageManager.getPackageInfo(packageName, 0).versionName
@@ -52,6 +58,10 @@ class SettingsActivity : AppCompatActivity() {
                     )
                 )
             } catch (e: Exception) {}
+        }
+        val button = binding.buttonback
+        button.setOnClickListener {
+            onBackPressedDispatcher.onBackPressed()
         }
     }
 }

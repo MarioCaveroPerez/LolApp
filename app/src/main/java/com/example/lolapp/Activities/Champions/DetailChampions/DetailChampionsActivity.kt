@@ -1,5 +1,6 @@
 package com.example.lolapp.Activities.Champions.DetailChampions
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -8,6 +9,7 @@ import com.example.lolapp.Activities.Champions.DetailChampions.Fragments.General
 import com.example.lolapp.Activities.Champions.DetailChampions.Fragments.HabilidadesFragment
 import com.example.lolapp.Activities.Champions.DetailChampions.Fragments.LoreFragment
 import com.example.lolapp.Activities.Champions.DetailChampions.Fragments.SkinsFragment
+import com.example.lolapp.Activities.Champions.MainActivity
 import com.example.lolapp.R
 import com.example.lolapp.Utils.ApiService
 import com.example.lolapp.databinding.ActivityDetailChampionsBinding
@@ -42,6 +44,11 @@ class DetailChampionsActivity : AppCompatActivity() {
             loadChampionDetail(championId)
         } else {
             Toast.makeText(this, "No se recibió el campeón", Toast.LENGTH_SHORT).show()
+        }
+
+        val button = binding.buttonback
+        button.setOnClickListener {
+            onBackPressedDispatcher.onBackPressed()
         }
     }
 
