@@ -10,8 +10,9 @@ import com.example.lolapp.Data.SpellItem
 import com.example.lolapp.R
 import com.squareup.picasso.Picasso
 
-class SpellsAdapter(private val spellsList: List<SpellItem>) :
+class SpellsAdapter(private var spellsList: List<SpellItem>) :
     RecyclerView.Adapter<SpellsAdapter.SpellViewHolder>() {
+
 
     inner class SpellViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val ivSpellImage: ImageView = itemView.findViewById(R.id.ivSpellImage)
@@ -19,7 +20,10 @@ class SpellsAdapter(private val spellsList: List<SpellItem>) :
         val tvSpellCost: TextView = itemView.findViewById(R.id.tvSpellCost)
         val tvSpellDescription: TextView = itemView.findViewById(R.id.tvSpellDescription)
     }
-
+    fun updateList(newList: List<SpellItem>) {
+        spellsList = newList
+        notifyDataSetChanged()
+    }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SpellViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_spells, parent, false)

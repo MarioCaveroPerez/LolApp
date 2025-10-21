@@ -1,18 +1,16 @@
 package com.example.lolapp.Activities.Champions.DetailChampions.Fragments
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.example.lolapp.Data.ChampionDetailWithStatsResponse
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
+import com.example.lolapp.Data.ChampionDetailFull
 import com.example.lolapp.Data.ChampionStatsUI
-import com.example.lolapp.Utils.ApiService
+import com.example.lolapp.Data.Repository.ChampionRepository
 import com.example.lolapp.databinding.FragmentGeneralBinding
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
@@ -20,42 +18,25 @@ class GeneralFragment : Fragment() {
 
     private var _binding: FragmentGeneralBinding? = null
     private val binding get() = _binding!!
-
-    private lateinit var apiService: ApiService
+    private lateinit var repository: ChampionRepository
     private var championId: String? = null
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentGeneralBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         championId = arguments?.getString("champion_id")
-
-        val retrofit = Retrofit.Builder()
-            .baseUrl("https://ddragon.leagueoflegends.com/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-
-        apiService = retrofit.create(ApiService::class.java)
-
+        repository = createRepository()
         championId?.let { fetchChampionStats(it) }
     }
 
     private fun fetchChampionStats(championId: String) {
-        CoroutineScope(Dispatchers.IO).launch {
+        lifecycleScope.launch {
             try {
-                val response: ChampionDetailWithStatsResponse =
-                    apiService.getChampionDetailsWithStats(championId)
-
-                val champion = response.data[championId]!!
-
-                // Mapear a ChampionStatsUI
+                val champion: ChampionDetailFull = repository.getChampionDetail(championId)
                 val stats = ChampionStatsUI(
                     hp = champion.stats.hp,
                     hpPerLevel = champion.stats.hpperlevel,
@@ -76,11 +57,7 @@ class GeneralFragment : Fragment() {
                     magic = champion.info.magic,
                     difficulty = champion.info.difficulty
                 )
-
-                withContext(Dispatchers.Main) {
-                    displayStats(stats)
-                }
-
+                displayStats(stats)
             } catch (e: Exception) {
                 e.printStackTrace()
             }
@@ -88,34 +65,31 @@ class GeneralFragment : Fragment() {
     }
 
     private fun displayStats(stats: ChampionStatsUI) {
-        // Formatear valores con 2 decimales donde sea necesario
         binding.tvHpValue.text = "${stats.hp} - ${stats.hp + stats.hpPerLevel * 17}"
         binding.tvMpValue.text = "${stats.mp} - ${stats.mp + stats.mpPerLevel * 17}"
-        binding.tvAttackDamageValue.text =
-            "${stats.attackDamage} - ${stats.attackDamage + stats.attackDamagePerLevel * 17}"
+        binding.tvAttackDamageValue.text = "${stats.attackDamage} - ${stats.attackDamage + stats.attackDamagePerLevel * 17}"
 
-        // Attack Speed con 2 decimales
         val attackSpeed = stats.attackSpeed * (1 + stats.attackSpeedPerLevel * 17 / 100)
         binding.tvAttackSpeedValue.text = String.format("%.2f", attackSpeed)
 
-        // Armor y SpellBlock con 2 decimales
-        val armorMax = stats.armor + stats.armorPerLevel * 17
-        binding.tvArmorValue.text = "${stats.armor} - ${String.format("%.2f", armorMax)}"
-
-        val spellBlockMax = stats.spellBlock + stats.spellBlockPerLevel * 17
-        binding.tvMagicResistValue.text = "${stats.spellBlock} - ${String.format("%.2f", spellBlockMax)}"
-
-        // Valores enteros
+        binding.tvArmorValue.text = "${stats.armor} - ${String.format("%.2f", stats.armor + stats.armorPerLevel * 17)}"
+        binding.tvMagicResistValue.text = "${stats.spellBlock} - ${String.format("%.2f", stats.spellBlock + stats.spellBlockPerLevel * 17)}"
         binding.tvRangeValue.text = stats.attackRange.toString()
         binding.tvMoveSpeedValue.text = stats.moveSpeed.toString()
-
-        // ProgressBars (valores entre 0-10)
         binding.pbAttack.progress = stats.attack
         binding.pbDefense.progress = stats.defense
         binding.pbMagic.progress = stats.magic
         binding.pbDifficulty.progress = stats.difficulty
     }
 
+    private fun createRepository(): ChampionRepository {
+        val retrofit = Retrofit.Builder()
+            .baseUrl("https://ddragon.leagueoflegends.com/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+        val apiService = retrofit.create(com.example.lolapp.Utils.ApiService::class.java)
+        return ChampionRepository.create(requireContext(), apiService)
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()

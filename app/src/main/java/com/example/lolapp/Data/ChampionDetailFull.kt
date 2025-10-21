@@ -1,15 +1,21 @@
 package com.example.lolapp.Data
 
 import android.os.Parcelable
+import com.google.gson.annotations.SerializedName
 import kotlinx.parcelize.Parcelize
 
 data class ChampionDetailFull(
     val id: String,
     val name: String,
     val title: String,
+    val lore: String,
     val stats: Stats,
-    val info: Info
+    val info: Info,
+    @SerializedName("skins") val skins: List<Skins>
 )
+
+
+
 
 data class Stats(
     val hp: Double,

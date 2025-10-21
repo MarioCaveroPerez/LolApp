@@ -10,6 +10,7 @@ import com.example.lolapp.Activities.Champions.DetailChampions.Fragments.Habilid
 import com.example.lolapp.Activities.Champions.DetailChampions.Fragments.LoreFragment
 import com.example.lolapp.Activities.Champions.DetailChampions.Fragments.SkinsFragment
 import com.example.lolapp.Activities.Champions.MainActivity
+import com.example.lolapp.Data.Repository.ChampionRepository
 import com.example.lolapp.R
 import com.example.lolapp.Utils.ApiService
 import com.example.lolapp.databinding.ActivityDetailChampionsBinding
@@ -27,6 +28,7 @@ class DetailChampionsActivity : AppCompatActivity() {
     private lateinit var binding: ActivityDetailChampionsBinding
     private lateinit var retrofit: Retrofit
     private lateinit var apiService: ApiService
+    private lateinit var repository: ChampionRepository
 
     private var currentChampionId: String? = null
     private var currentChampionSkins = emptyList<Skins>()
@@ -38,6 +40,7 @@ class DetailChampionsActivity : AppCompatActivity() {
 
         retrofit = getRetrofit()
         apiService = retrofit.create(ApiService::class.java)
+        repository = ChampionRepository.create(this, apiService)
 
         val championId = intent.getStringExtra("champion_id")
         if (championId != null) {
@@ -55,8 +58,7 @@ class DetailChampionsActivity : AppCompatActivity() {
     private fun loadChampionDetail(championId: String) {
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val response = apiService.getDetailChampions()
-                val champion = response.data[championId]!!
+                val champion = repository.getChampionDetail(championId)
 
                 withContext(Dispatchers.Main) {
                     currentChampionId = champion.id

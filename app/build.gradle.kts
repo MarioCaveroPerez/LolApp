@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     id("kotlin-parcelize")
+    id("kotlin-kapt")
 }
 
 android {
@@ -33,6 +34,8 @@ android {
     }
     kotlinOptions {
         jvmTarget = "11"
+        languageVersion = "1.9"
+
     }
 
     viewBinding {
@@ -63,6 +66,11 @@ dependencies {
 
     //SearchBarViewMansour
     implementation("com.github.IgniteCoders:SearchBarView:1.0.1")
+
+    //Room
+    implementation("androidx.room:room-runtime:2.6.1")
+    kapt("androidx.room:room-compiler:2.6.1")
+    implementation("androidx.room:room-ktx:2.6.1")
 
     //GoogleFonts
     implementation("androidx.core:core:1.12.0")
