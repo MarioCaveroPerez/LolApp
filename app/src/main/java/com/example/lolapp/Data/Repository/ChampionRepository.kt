@@ -8,6 +8,7 @@ import com.example.lolapp.Data.Local.ChampionDao
 import com.example.lolapp.Data.Local.ChampionDetailDao
 import com.example.lolapp.Data.Local.ChampionSpellsDao
 import com.example.lolapp.Data.Local.DatabaseProvider
+import com.example.lolapp.Data.Local.SkinDao
 import com.example.lolapp.Data.Mappers.toEntity
 import com.example.lolapp.Data.Mappers.toEntityFull
 import com.example.lolapp.Data.Mappers.toChampionDetailFull
@@ -15,12 +16,15 @@ import com.example.lolapp.Data.Mappers.toChampionWithSpells
 import com.example.lolapp.Utils.ApiService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 class ChampionRepository(
     private val api: ApiService,
     private val championDao: ChampionDao,
     private val championDetailDao: ChampionDetailDao,
-    private val championSpellsDao: ChampionSpellsDao
+    private val championSpellsDao: ChampionSpellsDao,
+    private val skinDao: SkinDao
 ) {
 
     // Cache en memoria
@@ -59,8 +63,14 @@ class ChampionRepository(
 
             // Luego DB local
             val local = championDetailDao.getChampionDetail(championId)
-            if (local != null && !forceRefresh) {
-                val mapped = local.toChampionDetailFull()
+            val localSkins = skinDao.getSkinsForChampion(championId)
+
+            if (local != null && !forceRefresh && localSkins.isNotEmpty()) {
+                val mapped = local.toChampionDetailFull(
+                    skins = localSkins.map {
+                        com.example.lolapp.Data.Skins(it.num, it.name, it.chromas)
+                    }
+                )
                 championDetailCache[championId] = mapped
                 return@withContext mapped
             }
@@ -71,6 +81,17 @@ class ChampionRepository(
 
             // Guardar en DB
             championDetailDao.insertChampionDetail(champion.toEntityFull())
+            skinDao.deleteSkinsForChampion(championId)
+            skinDao.insertAll(
+                champion.skins.map {
+                    com.example.lolapp.Data.Local.SkinEntity(
+                        championId = championId,
+                        num = it.num,
+                        name = it.name,
+                        chromas = it.chromas
+                    )
+                }
+            )
             championDetailCache[championId] = champion.copy(skins = champion.skins)
 
 
@@ -79,7 +100,6 @@ class ChampionRepository(
             champion
         }
     }
-
 
     suspend fun getChampionSpells(championId: String, forceRefresh: Boolean = false): ChampionWithSpells {
         return withContext(Dispatchers.IO) {
@@ -103,7 +123,7 @@ class ChampionRepository(
     companion object {
         fun create(context: Context, api: ApiService): ChampionRepository {
             val db = DatabaseProvider.getDatabase(context)
-            return ChampionRepository(api, db.championDao(), db.championDetailDao(), db.championSpellsDao())
+            return ChampionRepository(api, db.championDao(), db.championDetailDao(), db.championSpellsDao(), db.skinDao())
         }
     }
 }
