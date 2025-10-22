@@ -26,7 +26,7 @@
             android:name=".Activities.Runes.RunesActivity"
             android:exported="false" />
         <activity
-            android:name=".Activities.Items.ItemsDetail.ItemsDetailActivity"
+            android:name=".Activities.Items.ItemsDetail.ItemDetailBottomSheetFragment"
             android:exported="false" />
         <activity
             android:name=".Activities.Items.ItemsActivity"

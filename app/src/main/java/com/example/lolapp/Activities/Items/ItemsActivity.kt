@@ -12,9 +12,9 @@ import androidx.core.view.GravityCompat
 import androidx.core.widget.doOnTextChanged
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.GridLayoutManager
-import com.example.lolapp.Activities.Champions.DetailChampions.DetailChampionsActivity
 import com.example.lolapp.Activities.Champions.MainActivity
 import com.example.lolapp.Activities.Info.InfoActivity
+import com.example.lolapp.Activities.Items.ItemsDetail.ItemDetailBottomSheetFragment
 import com.example.lolapp.Activities.Settings.SettingsActivity
 import com.example.lolapp.Adapters.ItemAdapter
 import com.example.lolapp.Data.Item
@@ -60,7 +60,6 @@ class ItemsActivity : AppCompatActivity() {
                         val intent = Intent(this, MainActivity::class.java)
                         startActivity(intent)
                     }
-                    R.id.nav_items -> {}
                     R.id.nav_runes -> {
                         Toast.makeText(this, "Runas", Toast.LENGTH_SHORT).show()
                     }
@@ -160,11 +159,17 @@ class ItemsActivity : AppCompatActivity() {
                     val response = apiService.getItems()
                     val itemList = response.data.values.toList()
 
-                    withContext(Dispatchers.Main) {
-                        allItems = itemList
-                        adapter = ItemAdapter(allItems) { itemName ->
+                    val filteredItems = itemList
+                        .filter { it.maps["11"] == true }
+                        .filter { it.gold?.purchasable == true }
+                        .distinctBy { it.name }
+                        .sortedBy { it.gold?.total ?: Int.MAX_VALUE }
+
+                            withContext(Dispatchers.Main) {
+                        allItems = filteredItems
+                        adapter = ItemAdapter(this@ItemsActivity, allItems) { itemName ->
                             val intent =
-                                Intent(this@ItemsActivity, DetailChampionsActivity::class.java)
+                                Intent(this@ItemsActivity, ItemDetailBottomSheetFragment::class.java)
                             intent.putExtra("item_name", itemName)
                             startActivity(intent)
                         }

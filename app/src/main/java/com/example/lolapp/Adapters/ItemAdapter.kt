@@ -2,12 +2,13 @@ package com.example.lolapp.Adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.example.lolapp.Data.Champion
 import com.example.lolapp.Data.Item
 import com.example.lolapp.R
 
-class ItemAdapter(var itemList: List<Item>, val onItemClick: (String) -> Unit) : RecyclerView.Adapter<ItemViewHolder>() {
+class ItemAdapter(private val activity: FragmentActivity, var itemList: List<Item>, val onItemClick: (String) -> Unit) : RecyclerView.Adapter<ItemViewHolder>() {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
@@ -24,7 +25,7 @@ class ItemAdapter(var itemList: List<Item>, val onItemClick: (String) -> Unit) :
         holder: ItemViewHolder,
         position: Int
     ) {
-        holder.bind(itemList[position], onItemClick)
+        holder.bind(itemList[position], activity, onItemClick)
     }
 
     override fun getItemCount() = itemList.size
