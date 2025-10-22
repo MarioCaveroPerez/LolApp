@@ -25,6 +25,8 @@ class SkinsAdapter(private val championId: String, private var skinsList: List<S
         val btnDownload = itemView.findViewById<ImageButton>(R.id.btnDownload)
 
         val tvSkinName = itemView.findViewById<TextView>(R.id.tvSkinName)
+
+        var imgChroma = itemView.findViewById<ImageView>(R.id.imageChroma)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SkinsViewHolder {
@@ -47,6 +49,9 @@ class SkinsAdapter(private val championId: String, private var skinsList: List<S
             .into(holder.ivSkin)
         holder.btnDownload.setOnClickListener {
             downloadImage(holder.itemView.context, splashUrl, skin.name)
+        }
+        if (skin.chromas != false){
+            holder.imgChroma.visibility = View.VISIBLE
         }
 
     }
