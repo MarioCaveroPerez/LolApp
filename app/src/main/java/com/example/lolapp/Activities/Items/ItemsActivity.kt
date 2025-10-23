@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.example.lolapp.Activities.Champions.MainActivity
 import com.example.lolapp.Activities.Info.InfoActivity
 import com.example.lolapp.Activities.Items.ItemsDetail.ItemDetailBottomSheetFragment
+import com.example.lolapp.Activities.Runes.RunesActivity
 import com.example.lolapp.Activities.Settings.SettingsActivity
 import com.example.lolapp.Adapters.ItemAdapter
 import com.example.lolapp.Data.Gold
@@ -64,9 +65,8 @@ class ItemsActivity : AppCompatActivity() {
                         val intent = Intent(this, MainActivity::class.java)
                         startActivity(intent)
                     }
-                    R.id.nav_runes -> {
-                        Toast.makeText(this, "Runas", Toast.LENGTH_SHORT).show()
-                    }
+                    R.id.nav_runes -> startActivity(Intent(this, RunesActivity::class.java))
+
                     R.id.nav_settings -> {
                         val intent = Intent(this, SettingsActivity::class.java)
                         startActivity(intent)

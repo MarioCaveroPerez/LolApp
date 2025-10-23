@@ -27,7 +27,8 @@
             android:exported="false" />
         <activity
             android:name=".Activities.Items.ItemsDetail.ItemDetailBottomSheetFragment"
-            android:exported="false" />
+            android:exported="false"
+            tools:ignore="Instantiatable" />
         <activity
             android:name=".Activities.Items.ItemsActivity"
             android:exported="false" />

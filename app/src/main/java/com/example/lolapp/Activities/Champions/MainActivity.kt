@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.example.lolapp.Activities.Champions.DetailChampions.DetailChampionsActivity
 import com.example.lolapp.Activities.Info.InfoActivity
 import com.example.lolapp.Activities.Items.ItemsActivity
+import com.example.lolapp.Activities.Runes.RunesActivity
 import com.example.lolapp.Activities.Settings.SettingsActivity
 import com.example.lolapp.Adapters.ChampionAdapter
 import com.example.lolapp.Data.Champion
@@ -64,7 +65,7 @@ class MainActivity : AppCompatActivity() {
         navView.setNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.nav_items -> startActivity(Intent(this, ItemsActivity::class.java))
-                R.id.nav_runes -> Toast.makeText(this, "Runas", Toast.LENGTH_SHORT).show()
+                R.id.nav_runes -> startActivity(Intent(this, RunesActivity::class.java))
                 R.id.nav_settings -> startActivity(Intent(this, SettingsActivity::class.java))
                 R.id.info -> startActivity(Intent(this, InfoActivity::class.java))
             }
