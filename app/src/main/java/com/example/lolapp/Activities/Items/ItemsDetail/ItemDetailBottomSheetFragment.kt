@@ -8,12 +8,19 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.fragment.app.FragmentActivity
+import com.example.lolapp.Data.Gold
 import com.example.lolapp.Data.Item
+import com.example.lolapp.Data.ItemImage
+import com.example.lolapp.Data.Local.DatabaseProvider
 import com.example.lolapp.R
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.squareup.picasso.Picasso
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class ItemDetailBottomSheetFragment(
     private val item: Item,
@@ -95,9 +102,36 @@ class ItemDetailBottomSheetFragment(
                 Picasso.get().load("https://ddragon.leagueoflegends.com/cdn/15.21.1/img/item/${filteredItem.image.full}")
                     .into(iv)
                 iv.setOnClickListener {
-                    dismiss()
-                    val fragment = ItemDetailBottomSheetFragment(filteredItem, allItems)
-                    fragment.show(parentFragmentManager, fragment.tag)
+                    CoroutineScope(Dispatchers.IO).launch {
+                        try {
+                            val db = DatabaseProvider.getDatabase(requireContext())
+                            val clickedEntity = db.itemDao().getItemByName(filteredItem.name)
+                            if (clickedEntity != null) {
+                                val clickedItem = Item(
+                                    name = clickedEntity.name,
+                                    description = clickedEntity.description,
+                                    gold = Gold(
+                                        clickedEntity.goldBase,
+                                        clickedEntity.goldTotal,
+                                        clickedEntity.goldSell,
+                                        clickedEntity.purchasable
+                                    ),
+                                    image = ItemImage(clickedEntity.imageFull),
+                                    purchasable = clickedEntity.purchasable,
+                                    maps = mapOf("11" to clickedEntity.map11),
+                                    into = clickedEntity.into,
+                                    from = clickedEntity.from
+                                )
+                                withContext(Dispatchers.Main) {
+                                    dismiss() // cerrar el bottomsheet actual
+                                    val fragment = ItemDetailBottomSheetFragment(clickedItem, allItems)
+                                    fragment.show(parentFragmentManager, fragment.tag)
+                                }
+                            }
+                        } catch (e: Exception) {
+                            e.printStackTrace() // para debug
+                        }
+                    }
                 }
                 buildTreeContainer.addView(iv)
             }
@@ -114,13 +148,56 @@ class ItemDetailBottomSheetFragment(
                 Picasso.get().load("https://ddragon.leagueoflegends.com/cdn/15.21.1/img/item/${filteredItem.image.full}")
                     .into(iv)
                 iv.setOnClickListener {
-                    dismiss()
-                    val fragment = ItemDetailBottomSheetFragment(filteredItem, allItems)
-                    fragment.show(parentFragmentManager, fragment.tag)
+                    CoroutineScope(Dispatchers.IO).launch {
+                        try {
+                            val db = DatabaseProvider.getDatabase(requireContext())
+                            val clickedEntity = db.itemDao().getItemByName(filteredItem.name)
+                            if (clickedEntity != null) {
+                                val clickedItem = Item(
+                                    name = clickedEntity.name,
+                                    description = clickedEntity.description,
+                                    gold = Gold(
+                                        clickedEntity.goldBase,
+                                        clickedEntity.goldTotal,
+                                        clickedEntity.goldSell,
+                                        clickedEntity.purchasable
+                                    ),
+                                    image = ItemImage(clickedEntity.imageFull),
+                                    purchasable = clickedEntity.purchasable,
+                                    maps = mapOf("11" to clickedEntity.map11),
+                                    into = clickedEntity.into,
+                                    from = clickedEntity.from
+                                )
+                                withContext(Dispatchers.Main) {
+                                    dismiss() // cerrar el bottomsheet actual
+                                    val fragment = ItemDetailBottomSheetFragment(clickedItem, allItems)
+                                    fragment.show(parentFragmentManager, fragment.tag)
+                                }
+                            }
+                        } catch (e: Exception) {
+                            e.printStackTrace() // para debug
+                        }
+                    }
                 }
                 fromContainer.addView(iv)
             }
     }
+
+    private suspend fun loadItemFromDB(name: String): Item? {
+        val db = DatabaseProvider.getDatabase(requireContext())
+        val entity = db.itemDao().getItemByName(name) ?: return null
+        return Item(
+            name = entity.name,
+            description = entity.description,
+            gold = Gold(entity.goldBase, entity.goldTotal, entity.goldSell, entity.purchasable),
+            image = ItemImage(entity.imageFull),
+            purchasable = entity.purchasable,
+            maps = mapOf("11" to entity.map11),
+            into = entity.into,
+            from = entity.from
+        )
+    }
+
 
     private fun cleanItemDescriptionPreserveAbilities(raw: String): String {
         val decoded = raw.replace("\\u003C".toRegex(), "<").replace("\\u003E".toRegex(), ">")

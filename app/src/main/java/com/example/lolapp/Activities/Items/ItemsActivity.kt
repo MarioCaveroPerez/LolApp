@@ -17,7 +17,11 @@ import com.example.lolapp.Activities.Info.InfoActivity
 import com.example.lolapp.Activities.Items.ItemsDetail.ItemDetailBottomSheetFragment
 import com.example.lolapp.Activities.Settings.SettingsActivity
 import com.example.lolapp.Adapters.ItemAdapter
+import com.example.lolapp.Data.Gold
 import com.example.lolapp.Data.Item
+import com.example.lolapp.Data.ItemImage
+import com.example.lolapp.Data.Local.DatabaseProvider
+import com.example.lolapp.Data.toEntity
 import com.example.lolapp.R
 import com.example.lolapp.Utils.ApiService
 import com.example.lolapp.databinding.ActivityItemsBinding
@@ -153,38 +157,75 @@ class ItemsActivity : AppCompatActivity() {
             })
         }
 
-        private fun loadItems() {
-            CoroutineScope(Dispatchers.IO).launch {
+    private fun loadItems() {
+        CoroutineScope(Dispatchers.IO).launch {
+            val db = DatabaseProvider.getDatabase(this@ItemsActivity)
+            var savedItems = db.itemDao().getAllItems()
+
+            if (savedItems.isEmpty()) {
                 try {
                     val response = apiService.getItems()
                     val itemList = response.data.values.toList()
-
                     val filteredItems = itemList
                         .filter { it.maps["11"] == true }
-                        .filter { it.gold?.purchasable == true }
+                        .filter { it.gold.purchasable == true }
                         .distinctBy { it.name }
-                        .sortedBy { it.gold?.total ?: Int.MAX_VALUE }
 
-                            withContext(Dispatchers.Main) {
-                        allItems = filteredItems
-                        adapter = ItemAdapter(this@ItemsActivity, allItems) { itemName ->
-                            val intent =
-                                Intent(this@ItemsActivity, ItemDetailBottomSheetFragment::class.java)
-                            intent.putExtra("item_name", itemName)
-                            startActivity(intent)
-                        }
-                        binding.rvitemslol.adapter = adapter
-                    }
+                    // Guardar en la DB
+                    db.itemDao().insertItems(filteredItems.map { it.toEntity() })
+                    savedItems = db.itemDao().getAllItems()
                 } catch (e: Exception) {
                     withContext(Dispatchers.Main) {
-                        Toast.makeText(this@ItemsActivity, "Error: ${e.message}", Toast.LENGTH_LONG)
-                            .show()
+                        Toast.makeText(this@ItemsActivity, "Error API: ${e.message}", Toast.LENGTH_LONG).show()
                     }
+                    return@launch
                 }
             }
-        }
 
-        private fun getRetrofit(): Retrofit {
+            // Convertir entities a objetos de dominio
+            val items = savedItems.map { entity ->
+                Item(
+                    name = entity.name,
+                    description = entity.description,
+                    gold = Gold(entity.goldBase, entity.goldTotal, entity.goldSell, entity.purchasable),
+                    image = ItemImage(entity.imageFull),
+                    purchasable = entity.purchasable,
+                    maps = mapOf("11" to entity.map11),
+                    into = entity.into,
+                    from = entity.from
+                )
+            }
+                .sortedBy { it.gold.total }
+
+            withContext(Dispatchers.Main) {
+                allItems = items
+                adapter = ItemAdapter(this@ItemsActivity, allItems) { itemName ->
+                    val entity = savedItems.find { it.name == itemName }
+                    entity?.let {
+                        val fragment = ItemDetailBottomSheetFragment(
+                            Item(
+                                name = it.name,
+                                description = it.description,
+                                gold = Gold(it.goldBase, it.goldTotal, it.goldSell, it.purchasable),
+                                image = ItemImage(it.imageFull),
+                                purchasable = it.purchasable,
+                                maps = mapOf("11" to it.map11),
+                                into = it.into,
+                                from = it.from
+                            ),
+                            allItems
+                        )
+                        fragment.show(supportFragmentManager, fragment.tag)
+                    }
+                }
+                binding.rvitemslol.adapter = adapter
+            }
+        }
+    }
+
+
+
+    private fun getRetrofit(): Retrofit {
             return Retrofit.Builder().baseUrl("https://ddragon.leagueoflegends.com/")
                 .addConverterFactory(GsonConverterFactory.create()).build()
         }
