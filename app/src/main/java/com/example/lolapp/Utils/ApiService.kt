@@ -13,19 +13,19 @@ import retrofit2.http.Path
 interface ApiService {
 
 
-        @GET("cdn/15.19.1/data/es_ES/champion.json")
+        @GET("cdn/15.21.1/data/es_ES/champion.json")
         suspend fun getChampions(): ChampionsResponse
 
-        @GET("cdn/15.19.1/data/es_ES/item.json")
+        @GET("cdn/15.21.1/data/es_ES/item.json")
         suspend fun getItems(): ItemsResponse
 
-        @GET("cdn/15.19.1/data/es_ES/championFull.json")
+        @GET("cdn/15.21.1/data/es_ES/championFull.json")
         suspend fun getDetailChampions(): DetailChampionResponse
 
-        @GET("cdn/15.19.1/data/es_ES/champion/{champion}.json")
+        @GET("cdn/15.21.1/data/es_ES/champion/{champion}.json")
         suspend fun getChampionDetailsWithStats(@Path("champion") championId: String): ChampionDetailWithStatsResponse
 
-        @GET("cdn/15.19.1/data/es_ES/champion/{champion}.json")
+        @GET("cdn/15.21.1/data/es_ES/champion/{champion}.json")
         suspend fun getChampionDetailsWithSpells(@Path("champion") championId: String): ChampionDetailWithSpellsResponse
 
 }

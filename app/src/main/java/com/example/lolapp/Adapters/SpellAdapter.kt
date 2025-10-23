@@ -38,9 +38,9 @@ class SpellsAdapter(private var spellsList: List<SpellItem>) :
         holder.tvSpellDescription.text = spell.description
 
         val imageUrl = if (spell.id == "passive") {
-            "https://ddragon.leagueoflegends.com/cdn/15.19.1/img/passive/${spell.image.full}"
+            "https://ddragon.leagueoflegends.com/cdn/15.21.1/img/passive/${spell.image.full}"
         } else {
-            "https://ddragon.leagueoflegends.com/cdn/15.19.1/img/spell/${spell.image.full}"
+            "https://ddragon.leagueoflegends.com/cdn/15.21.1/img/spell/${spell.image.full}"
         }
         Picasso.get().load(imageUrl).into(holder.ivSpellImage)
     }

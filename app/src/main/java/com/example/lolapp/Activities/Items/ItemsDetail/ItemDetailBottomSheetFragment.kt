@@ -10,10 +10,15 @@ import android.widget.TextView
 import androidx.fragment.app.FragmentActivity
 import com.example.lolapp.Data.Item
 import com.example.lolapp.R
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.squareup.picasso.Picasso
 
-class ItemDetailBottomSheetFragment(private val item: Item) : BottomSheetDialogFragment() {
+class ItemDetailBottomSheetFragment(
+    private val item: Item,
+    private val allItems: List<Item>
+) : BottomSheetDialogFragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -25,42 +30,13 @@ class ItemDetailBottomSheetFragment(private val item: Item) : BottomSheetDialogF
         val tvItemName = view.findViewById<TextView>(R.id.tvItemName)
         val tvItemPrice = view.findViewById<TextView>(R.id.tvItemPrice)
         val tvItemDescription = view.findViewById<TextView>(R.id.tvItemDescription)
-        val buildTreeContainer = view.findViewById<LinearLayout>(R.id.buildTreeContainer)
-        val buildFromContainer = view.findViewById<LinearLayout>(R.id.fromContainer)
 
-        // Setear datos básicos
+        // Datos básicos
         tvItemName.text = item.name
         tvItemPrice.text = "${item.gold.total} gold"
-        val rawDescription = item.description
-        val cleanDescription = cleanItemDescriptionPreserveAbilities(rawDescription)
-        tvItemDescription.text = cleanDescription
-        Picasso.get()
-            .load("https://ddragon.leagueoflegends.com/cdn/15.19.1/img/item/${item.image.full}")
+        tvItemDescription.text = cleanItemDescriptionPreserveAbilities(item.description)
+        Picasso.get().load("https://ddragon.leagueoflegends.com/cdn/15.21.1/img/item/${item.image.full}")
             .into(ivItemImage)
-
-        // Árbol de build
-        if (!item.into.isNullOrEmpty()) {
-            buildTreeContainer.visibility = View.VISIBLE
-            buildTreeContainer.removeAllViews()
-            buildFromContainer.visibility = View.VISIBLE
-            buildFromContainer.removeAllViews()
-
-            item.into.forEach { itemId ->
-                val imageView = ImageView(requireContext())
-                val size = 64.dp(requireContext() as FragmentActivity)
-                val layoutParams = LinearLayout.LayoutParams(size, size)
-                layoutParams.setMargins(8, 0, 8, 0)
-                imageView.layoutParams = layoutParams
-
-                Picasso.get()
-                    .load("https://ddragon.leagueoflegends.com/cdn/15.19.1/img/item/$itemId.png")
-                    .into(imageView)
-
-                buildTreeContainer.addView(imageView)
-            }
-        } else {
-            buildTreeContainer.visibility = View.GONE
-        }
 
         return view
     }
@@ -68,69 +44,91 @@ class ItemDetailBottomSheetFragment(private val item: Item) : BottomSheetDialogF
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val bottomSheet = view.parent as? View
-        val behavior = com.google.android.material.bottomsheet.BottomSheetBehavior.from(bottomSheet!!)
+        val bottomSheet = dialog?.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
+            ?: return
+        val behavior = BottomSheetBehavior.from(bottomSheet)
 
+        // Inicialización
+        behavior.isFitToContents = true
+        behavior.isDraggable = true
+        behavior.skipCollapsed = false
+        view.post {
+            val tvItemDescription = view.findViewById<TextView>(R.id.tvItemDescription)
+            val descriptionHeight = tvItemDescription.height
+            val padding = 75.dp(requireContext() as FragmentActivity) // opcional, para espacio visual
+            behavior.peekHeight = descriptionHeight + padding
+        }
+        behavior.state = BottomSheetBehavior.STATE_COLLAPSED
+
+        // Referencias de sección expandida
         val expandedSection = view.findViewById<LinearLayout>(R.id.expandedSection)
         val buildTreeContainer = view.findViewById<LinearLayout>(R.id.buildTreeContainer)
         val fromContainer = view.findViewById<LinearLayout>(R.id.fromContainer)
+        expandedSection.alpha = 0f
+        expandedSection.visibility = View.VISIBLE
 
-        // Mostrar/ocultar según estado
-        behavior.addBottomSheetCallback(object : com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCallback() {
-            override fun onStateChanged(bottomSheet: View, newState: Int) {
-                expandedSection.visibility = if (newState == com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_EXPANDED) {
-                    View.VISIBLE
-                } else {
-                    View.GONE
-                }
+        // Animación inicial de apertura
+        bottomSheet.translationY = bottomSheet.height.toFloat()
+        bottomSheet.animate()
+            .translationY(0f)
+            .setDuration(300)
+            .setInterpolator(android.view.animation.AccelerateDecelerateInterpolator())
+            .start()
+
+        // Fade in/out de la sección expandida al arrastrar
+        behavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+            override fun onStateChanged(bottomSheet: View, newState: Int) {}
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {
+                expandedSection.alpha = slideOffset.coerceIn(0f, 1f)
             }
-            override fun onSlide(bottomSheet: View, slideOffset: Float) {}
         })
 
-        // Llenar "Crafteable" (into)
-        item.into?.distinctBy { item.description }?.forEach { id ->
-            val iv = ImageView(requireContext())
-            val size = 64.dp(requireContext() as FragmentActivity)
-            iv.layoutParams = LinearLayout.LayoutParams(size, size).apply { setMargins(8,0,8,0) }
-            Picasso.get().load("https://ddragon.leagueoflegends.com/cdn/15.19.1/img/item/$id.png").into(iv)
-            buildTreeContainer.addView(iv)
-        }
+        // --- Fill INTO ---
+        item.into
+            ?.mapNotNull { id -> allItems.find { it.image.full.contains(id) && it.maps["11"] == true && it.gold.purchasable == true } }
+            ?.distinctBy { it.name }
+            ?.sortedBy { it.gold.total }
+            ?.forEach { filteredItem ->
+                val iv = ImageView(requireContext())
+                val size = 64.dp(requireContext() as FragmentActivity)
+                iv.layoutParams = LinearLayout.LayoutParams(size, size).apply { setMargins(8, 0, 8, 0) }
+                Picasso.get().load("https://ddragon.leagueoflegends.com/cdn/15.21.1/img/item/${filteredItem.image.full}")
+                    .into(iv)
+                iv.setOnClickListener {
+                    dismiss()
+                    val fragment = ItemDetailBottomSheetFragment(filteredItem, allItems)
+                    fragment.show(parentFragmentManager, fragment.tag)
+                }
+                buildTreeContainer.addView(iv)
+            }
 
-        item.from?.distinctBy { item.name }?.forEach { id ->
-            val iv = ImageView(requireContext())
-            val size = 64.dp(requireContext() as FragmentActivity)
-            iv.layoutParams = LinearLayout.LayoutParams(size, size).apply { setMargins(8,0,8,0) }
-            Picasso.get().load("https://ddragon.leagueoflegends.com/cdn/15.19.1/img/item/$id.png").into(iv)
-            fromContainer.addView(iv)
-        }
+
+        // --- Fill FROM ---
+        item.from
+            ?.mapNotNull { id -> allItems.find { it.image.full.contains(id) && it.maps["11"] == true && it.gold.purchasable == true } }
+            ?.sortedBy { it.gold.total }
+            ?.forEach { filteredItem ->
+                val iv = ImageView(requireContext())
+                val size = 64.dp(requireContext() as FragmentActivity)
+                iv.layoutParams = LinearLayout.LayoutParams(size, size).apply { setMargins(8, 0, 8, 0) }
+                Picasso.get().load("https://ddragon.leagueoflegends.com/cdn/15.21.1/img/item/${filteredItem.image.full}")
+                    .into(iv)
+                iv.setOnClickListener {
+                    dismiss()
+                    val fragment = ItemDetailBottomSheetFragment(filteredItem, allItems)
+                    fragment.show(parentFragmentManager, fragment.tag)
+                }
+                fromContainer.addView(iv)
+            }
     }
 
-    fun cleanItemDescriptionPreserveAbilities(raw: String): String {
-        // Decodificar los caracteres Unicode
-        val decoded = raw.replace("\\u003C".toRegex(), "<")
-            .replace("\\u003E".toRegex(), ">")
-
-        // Reemplazar saltos de línea <br> por \n
-        var withLineBreaks = decoded.replace("<br>".toRegex(), "\n")
-
-        // Reemplazar etiquetas <passive> y <active> por algún marcador visible
-        // Por ejemplo, ponemos **PASSIVE:** o **ACTIVE:** antes del texto
-        withLineBreaks = withLineBreaks.replace("<passive>(.*?)</passive>".toRegex()) { match ->
-            "PASIVA: ${match.groupValues[1]}"
-        }
-
-        withLineBreaks = withLineBreaks.replace("<active>(.*?)</active>".toRegex()) { match ->
-            "ACTIVA: ${match.groupValues[1]}"
-        }
-
-        // Eliminar todas las demás etiquetas
-        val clean = withLineBreaks.replace("<.*?>".toRegex(), "")
-
-        return clean
+    private fun cleanItemDescriptionPreserveAbilities(raw: String): String {
+        val decoded = raw.replace("\\u003C".toRegex(), "<").replace("\\u003E".toRegex(), ">")
+        var text = decoded.replace("<br>".toRegex(), "\n")
+        text = text.replace("<passive>(.*?)</passive>".toRegex()) { "PASIVA: ${it.groupValues[1]}" }
+        text = text.replace("<active>(.*?)</active>".toRegex()) { "ACTIVA: ${it.groupValues[1]}" }
+        return text.replace("<.*?>".toRegex(), "")
     }
 
-
-    // Extensión para dp → px
-    private fun Int.dp(context: FragmentActivity): Int =
-        (this * context.resources.displayMetrics.density).toInt()
+    private fun Int.dp(context: FragmentActivity) = (this * context.resources.displayMetrics.density).toInt()
 }

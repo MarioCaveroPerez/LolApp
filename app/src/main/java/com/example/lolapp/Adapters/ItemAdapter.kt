@@ -14,7 +14,7 @@ class ItemAdapter(private val activity: FragmentActivity, var itemList: List<Ite
         viewType: Int
     ): ItemViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_champion, parent, false)
-        return ItemViewHolder(view)
+        return ItemViewHolder(view, itemList)
     }
     fun updateList(newList: List<Item>) {
         itemList = newList

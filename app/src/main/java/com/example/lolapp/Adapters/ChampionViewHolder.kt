@@ -12,7 +12,7 @@ class ChampionViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
     fun bind(champion: Champion, onItemSelected: (String) -> Unit){
         binding.nameChampion.text = champion.name
-        Picasso.get().load("https://ddragon.leagueoflegends.com/cdn/15.19.1/img/champion/${champion.image.full}").into(binding.imageChampion)
+        Picasso.get().load("https://ddragon.leagueoflegends.com/cdn/15.21.1/img/champion/${champion.image.full}").into(binding.imageChampion)
         binding.root.setOnClickListener { onItemSelected(champion.id) }
     }
 }
