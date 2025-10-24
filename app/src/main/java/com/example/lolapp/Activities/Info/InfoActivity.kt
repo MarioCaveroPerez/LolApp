@@ -13,7 +13,7 @@ class InfoActivity : AppCompatActivity() {
         binding = ActivityInfoBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val button = binding.buttonback
+        val button = binding.buttonBack
         button.setOnClickListener {
             onBackPressedDispatcher.onBackPressed()
         }
