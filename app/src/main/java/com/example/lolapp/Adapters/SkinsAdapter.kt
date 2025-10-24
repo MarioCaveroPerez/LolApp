@@ -48,7 +48,19 @@ class SkinsAdapter(private val championId: String, private var skinsList: List<S
             .centerCrop()
             .into(holder.ivSkin)
         holder.btnDownload.setOnClickListener {
-            downloadImage(holder.itemView.context, splashUrl, skin.name)
+            val context = holder.itemView.context
+
+            androidx.appcompat.app.AlertDialog.Builder(context)
+                .setTitle("Descargar Imagen")
+                .setMessage("Se descargará la imagen en su dispositivo móvil")
+                .setPositiveButton("Sí") { dialog, _ ->
+                    downloadImage(context, splashUrl, skin.name)
+                    dialog.dismiss()
+                }
+                .setNegativeButton("No") { dialog, _ ->
+                    dialog.dismiss()
+                }
+                .show()
         }
         if (skin.chromas != false){
             holder.imgChroma.visibility = View.VISIBLE

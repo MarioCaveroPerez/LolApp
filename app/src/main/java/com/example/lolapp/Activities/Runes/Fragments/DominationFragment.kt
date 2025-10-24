@@ -78,7 +78,18 @@ class DominationFragment : Fragment() {
         // Mostrar Key runes (primer slot)
         runeStyle.slots.firstOrNull()?.runes?.take(3)?.forEachIndexed { index, rune ->
             if (index < keyRunesViews.size) {
+                val fullUrl = baseUrl + rune.icon
+                val imageView = keyRunesViews[index]
+
                 Picasso.get().load(baseUrl + rune.icon).into(keyRunesViews[index])
+
+                imageView.setOnClickListener {
+                    RuneDetailDialogFragment.newInstance(
+                        rune.name,
+                        rune.longDesc!!,
+                        fullUrl
+                    ).show(parentFragmentManager, "rune_detail")
+                }
             }
         }
 
@@ -87,7 +98,18 @@ class DominationFragment : Fragment() {
             if (rowIndex < subRuneRows.size) {
                 slot.runes.take(3).forEachIndexed { i, rune ->
                     if (i < subRuneRows[rowIndex].size) {
+                        val fullUrl = baseUrl + rune.icon
+                        val imageView = subRuneRows[rowIndex][i]
+
                         Picasso.get().load(baseUrl + rune.icon).into(subRuneRows[rowIndex][i])
+
+                        imageView.setOnClickListener {
+                            RuneDetailDialogFragment.newInstance(
+                                rune.name,
+                                rune.longDesc!!,
+                                fullUrl
+                            ).show(parentFragmentManager, "rune_detail")
+                        }
                     }
                 }
             }

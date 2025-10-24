@@ -89,10 +89,17 @@ class RunesActivity : AppCompatActivity() {
     }
 
     private fun setupTabs() {
-        val tabs = listOf("DOMI", "PRECI", "SORCE", "VALOR", "INSP")
-        for (tabName in tabs) {
-            binding.tabLayoutRunes.addTab(binding.tabLayoutRunes.newTab().setText(tabName))
+        val tabIcons = listOf(
+            R.drawable.ic_domination,
+            R.drawable.ic_precision,
+            R.drawable.ic_sorcery,
+            R.drawable.ic_resolve,
+            R.drawable.ic_inspiration
+        )
+        for (iconRes in tabIcons) {
+            binding.tabLayoutRunes.addTab(binding.tabLayoutRunes.newTab().setIcon(iconRes))
         }
+        binding.tabLayoutRunes.tabIconTint = null
 
         binding.tabLayoutRunes.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
