@@ -5,6 +5,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.example.lolapp.Data.Local.DatabaseProvider
+import com.example.lolapp.Data.Local.RuneEntity
 import com.example.lolapp.Data.RuneStyle
 import com.example.lolapp.R
 import com.example.lolapp.Utils.ApiService
@@ -42,7 +44,7 @@ class InspirationFragment : Fragment() {
             (0 until row.childCount).map { i -> row.getChildAt(i) as ShapeableImageView }
         }
 
-        loadDominationRunes(view)
+        loadInspirationRunes()
 
         return view
     }
@@ -54,60 +56,78 @@ class InspirationFragment : Fragment() {
             .build()
     }
 
-    private fun loadDominationRunes(view: View) {
+    private fun loadInspirationRunes() {
         CoroutineScope(Dispatchers.IO).launch {
-            try {
-                val api = getRetrofit().create(ApiService::class.java)
-                val runes = api.getRunes()
+            val db = DatabaseProvider.getDatabase(requireContext())
+            val dao = db.runeDao()
 
-                val domination = runes.find { it.key.equals("Inspiration", ignoreCase = true) }
-                domination?.let { runeStyle ->
-                    withContext(Dispatchers.Main) {
-                        showRunes(runeStyle)
+            var runeEntity: RuneEntity? = dao.getRuneByKey("Inspiration")
+
+            if (runeEntity == null) {
+                try {
+                    val api = getRetrofit().create(ApiService::class.java)
+                    val runes = api.getRunes()
+
+
+                    val domination = runes.find { it.key.equals("Inspiration", ignoreCase = true) }
+
+                    domination?.let {
+                        val runeNames = it.slots.flatMap { slot -> slot.runes.map { r -> r.name } }
+                        val runeLongDescs = it.slots.flatMap { slot -> slot.runes.map { r -> r.longDesc ?: "" } }
+                        val iconUrls = it.slots.flatMap { slot -> slot.runes.map { r -> r.icon } }
+
+                        runeEntity = RuneEntity(
+                            key = it.key,
+                            runeNames = runeNames,
+                            runeLongDescs = runeLongDescs,
+                            slots = iconUrls
+                        )
+                        dao.insertRune(runeEntity!!)
                     }
+                } catch (e: Exception) {
+                    e.printStackTrace()
                 }
-            } catch (e: Exception) {
-                e.printStackTrace()
+            }
+            runeEntity?.let {
+                withContext(Dispatchers.Main) {
+                    showRunesFromEntity(it)
+                }
             }
         }
     }
 
-    private fun showRunes(runeStyle: RuneStyle) {
+    private fun showRunesFromEntity(entity: RuneEntity) {
         val baseUrl = "https://ddragon.leagueoflegends.com/cdn/img/"
 
-        // Mostrar Key runes (primer slot)
-        runeStyle.slots.firstOrNull()?.runes?.take(3)?.forEachIndexed { index, rune ->
+        entity.slots.take(3).forEachIndexed { index, iconUrl ->
             if (index < keyRunesViews.size) {
-                val fullUrl = baseUrl + rune.icon
                 val imageView = keyRunesViews[index]
-
-                Picasso.get().load(baseUrl + rune.icon).into(keyRunesViews[index])
+                Picasso.get().load(baseUrl + iconUrl).into(imageView)
 
                 imageView.setOnClickListener {
                     RuneDetailDialogFragment.newInstance(
-                        rune.name,
-                        rune.longDesc!!,
-                        fullUrl
+                        entity.runeNames[index],
+                        entity.runeLongDescs[index],
+                        baseUrl + iconUrl
                     ).show(parentFragmentManager, "rune_detail")
                 }
             }
         }
 
         // Mostrar subrunas (siguientes slots)
-        runeStyle.slots.drop(1).take(3).forEachIndexed { rowIndex, slot ->
+        entity.slots.drop(3).take(9).chunked(3).forEachIndexed { rowIndex, chunk ->
             if (rowIndex < subRuneRows.size) {
-                slot.runes.take(3).forEachIndexed { i, rune ->
-                    if (i < subRuneRows[rowIndex].size) {
-                        val fullUrl = baseUrl + rune.icon
+                chunk.forEachIndexed { i, iconUrl ->
+                    val indexGlobal = 3 + rowIndex * 3 + i
+                    if (i < subRuneRows[rowIndex].size && indexGlobal < entity.slots.size) {
                         val imageView = subRuneRows[rowIndex][i]
-
-                        Picasso.get().load(baseUrl + rune.icon).into(subRuneRows[rowIndex][i])
+                        Picasso.get().load(baseUrl + iconUrl).into(imageView)
 
                         imageView.setOnClickListener {
                             RuneDetailDialogFragment.newInstance(
-                                rune.name,
-                                rune.longDesc!!,
-                                fullUrl
+                                entity.runeNames[indexGlobal],
+                                entity.runeLongDescs[indexGlobal],
+                                baseUrl + iconUrl
                             ).show(parentFragmentManager, "rune_detail")
                         }
                     }

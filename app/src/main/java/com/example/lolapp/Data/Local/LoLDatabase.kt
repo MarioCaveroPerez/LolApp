@@ -6,8 +6,8 @@ import androidx.room.TypeConverters
 
 
 @Database(
-    entities = [ChampionEntity::class, ChampionDetailEntity::class, ChampionSpellsEntity::class, SkinEntity::class, ItemEntity::class],
-    version = 6,
+    entities = [ChampionEntity::class, ChampionDetailEntity::class, ChampionSpellsEntity::class, SkinEntity::class, ItemEntity::class, RuneEntity::class],
+    version = 8,
     exportSchema = false
 )
 @TypeConverters(Converters::class)
@@ -17,4 +17,6 @@ abstract class LoLDatabase : RoomDatabase() {
     abstract fun championSpellsDao(): ChampionSpellsDao
     abstract fun skinDao(): SkinDao
     abstract fun itemDao(): ItemDao
+    abstract fun runeDao(): RuneDao
+
 }
