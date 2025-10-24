@@ -6,6 +6,7 @@ import com.example.lolapp.Data.ChampionDetailWithStatsResponse
 import com.example.lolapp.Data.ChampionsResponse
 import com.example.lolapp.Data.DetailChampionResponse
 import com.example.lolapp.Data.ItemsResponse
+import com.example.lolapp.Data.RuneStyle
 import retrofit2.http.GET
 import retrofit2.http.Path
 
@@ -28,4 +29,6 @@ interface ApiService {
         @GET("cdn/15.21.1/data/es_ES/champion/{champion}.json")
         suspend fun getChampionDetailsWithSpells(@Path("champion") championId: String): ChampionDetailWithSpellsResponse
 
+        @GET("cdn/15.19.1/data/es_ES/runesReforged.json")
+        suspend fun getRunes(): List<RuneStyle>
 }

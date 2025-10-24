@@ -57,32 +57,6 @@
                         android:background="@android:color/transparent" />
                 </FrameLayout>
 
-                <!-- Botón búsqueda -->
-                <FrameLayout
-                    android:id="@+id/flSearch"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_marginTop="26dp"
-                    android:layout_marginEnd="28dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
-
-                    <ImageView
-                        android:id="@+id/ivSearch"
-                        android:layout_width="36dp"
-                        android:layout_height="36dp"
-                        android:layout_gravity="center"
-                        android:src="@drawable/ic_search"
-                        app:tint="@color/white" />
-
-                    <Button
-                        android:id="@+id/btnSearch"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="@android:color/transparent" />
-                </FrameLayout>
-
                 <!-- Título -->
                 <TextView
                     android:id="@+id/tvTitle"
@@ -136,16 +110,14 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvRunesLol"
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/fragmentContainerRunes"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="12dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tabLayoutRunes"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tabLayoutRunes" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
