@@ -99,8 +99,6 @@ La app obtiene datos actualizados directamente desde los endpoints de Riot:
 Este proyecto está bajo la licencia **MIT**.  
 Puedes usar, modificar y distribuir el código libremente, siempre que se mantenga el crédito original.
 
-📄 [Ver licencia completa](LICENSE)
-
 ---
 
 ## 🔗 Recursos y documentación
