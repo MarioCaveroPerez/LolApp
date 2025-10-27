@@ -73,7 +73,7 @@ class SettingsActivity : AppCompatActivity() {
                 startActivity(
                     Intent(
                         Intent.ACTION_VIEW,
-                        Uri.parse("https://github.com/MarioCvPz")
+                        Uri.parse("https://github.com/MarioCaveroPerez/LolApp.git")
                     )
                 )
             } catch (e: Exception) {}
