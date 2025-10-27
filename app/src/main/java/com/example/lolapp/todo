@@ -5,6 +5,9 @@ TO DO
 -Agregar el cambio de version nada mas entre a la aplicacion, si la version cambia al bd local muere y crea nueva bd
 -Mirar la estructura del proyecto
 -Cambiar y limpiar codigo, importante que las funciones no tengan mas de xLineas
+-Hay un problema de funcionalidad en items al buscar, te dejan de aparecer los item de from y to porque no estan en la lista actual
+-En info cambiar y mejorar textos y formato
+-Subirlo github MarioCvPz
 
 LATE
 -Informarse de como sacar una aplicacion a la playstore
