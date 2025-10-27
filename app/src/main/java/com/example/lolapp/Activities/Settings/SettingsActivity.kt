@@ -44,7 +44,7 @@ class SettingsActivity : AppCompatActivity() {
                 "es" -> 0
                 "en" -> 1
                 "fr" -> 2
-                else -> 0
+                else -> 1
             }
         )
 
@@ -54,7 +54,7 @@ class SettingsActivity : AppCompatActivity() {
                     0 -> "es"
                     1 -> "en"
                     2 -> "fr"
-                    else -> "es"
+                    else -> "en"
                 }
 
                 val currentLang = prefs.getString("language", "es")
