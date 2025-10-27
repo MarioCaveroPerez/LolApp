@@ -92,5 +92,31 @@ La app obtiene datos actualizados directamente desde los endpoints de Riot:
 - ⚡ **Coroutines:** asincronía sin bloquear la interfaz.  
 - 🎨 **Adapters:** renderizado dinámico en listas con RecyclerView.
 
+---
+
+## 🛡️ Licencia
+
+Este proyecto está bajo la licencia **MIT**.  
+Puedes usar, modificar y distribuir el código libremente, siempre que se mantenga el crédito original.
+
+📄 [Ver licencia completa](LICENSE)
+
+---
+
+## 🔗 Recursos y documentación
+
+- [Riot Developer Portal](https://developer.riotgames.com/)  
+- [Retrofit Documentation](https://square.github.io/retrofit/)  
+- [Picasso](https://square.github.io/picasso/)  
+- [Android Room](https://developer.android.com/training/data-storage/room)  
+- [Kotlin Coroutines](https://kotlinlang.org/docs/coroutines-overview.html)  
+
+---
+
+## 💬 Autor
+
+👨‍💻 **Tu Nombre**  
+📧 *mario.cavero2002@cgmail.com*  
+🌍 [GitHub](https://github.com/MarioCaveroPerez)
 
 
