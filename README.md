@@ -45,5 +45,52 @@ Incluye una base de datos local para acceder **sin conexión**, interfaz moderna
 
 ---
 
-## 🗂️ **Estructura del proyecto**
+## 🖥️ Guía de uso
+
+📜 **Inicio:** muestra todos los campeones disponibles.  
+🔍 **Búsqueda:** filtra campeones en tiempo real.  
+👑 **Detalles:** accede a estadísticas, habilidades y skins del campeón seleccionado.  
+🛒 **Objetos:** consulta precios, atributos y descripciones.  
+🔮 **Runas:** visualiza efectos y estilos.  
+⚙️ **Ajustes:** cambia tema o idioma de la aplicación.
+
+---
+
+## 💾 Base de datos local (Room)
+
+| Entidad | Descripción |
+|---------|-------------|
+| `ChampionEntity` | Datos básicos de campeones |
+| `ChampionDetailEntity` | Estadísticas completas |
+| `ChampionSpellsEntity` | Habilidades del campeón |
+| `SkinEntity` | Skins y recursos visuales |
+| `ItemEntity` | Objetos con atributos y costos |
+| `RuneEntity` | Runas y efectos |
+
+---
+
+## 📡 Integración con API (Riot Data Dragon)
+
+La app obtiene datos actualizados directamente desde los endpoints de Riot:
+
+| Tipo | Endpoint |
+|------|----------|
+| Campeones | `cdn/15.21.1/data/es_ES/champion.json` |
+| Detalles | `cdn/15.21.1/data/es_ES/champion/{champion}.json` |
+| Objetos | `cdn/15.21.1/data/es_ES/item.json` |
+| Runas | `cdn/15.19.1/data/es_ES/runesReforged.json` |
+
+---
+
+## 🧱 Arquitectura
+
+**Clean Architecture + MVVM-like**
+
+- 🧩 **Repository:** capa central que decide entre API o base local.  
+- 🔁 **Mappers:** transforman objetos entre capas.  
+- 🗃️ **Room:** persistencia de datos y cache offline.  
+- ⚡ **Coroutines:** asincronía sin bloquear la interfaz.  
+- 🎨 **Adapters:** renderizado dinámico en listas con RecyclerView.
+
+
 
