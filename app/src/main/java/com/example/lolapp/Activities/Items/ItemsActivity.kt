@@ -60,6 +60,12 @@ class ItemsActivity : AppCompatActivity() {
             navView = binding.navView
 
             navView.setNavigationItemSelectedListener { menuItem ->
+                navView.itemBackground = null
+
+                menuItem.isChecked = false
+                for (i in 0 until navView.menu.size()) {
+                    navView.menu.getItem(i).isChecked = false
+                }
                 when (menuItem.itemId) {
                     R.id.nav_champ -> {
                         val intent = Intent(this, MainActivity::class.java)
@@ -76,6 +82,7 @@ class ItemsActivity : AppCompatActivity() {
                         startActivity(intent)
                     }
                 }
+
                 drawerLayout.closeDrawer(GravityCompat.START)
                 true
             }
@@ -149,8 +156,10 @@ class ItemsActivity : AppCompatActivity() {
                             imm.hideSoftInputFromWindow(editText.windowToken, 0)
                         }
                         else -> {
-                            isEnabled = false
-                            onBackPressedDispatcher.onBackPressed()
+                            val intent = Intent(this@ItemsActivity, MainActivity::class.java)
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
+                            startActivity(intent)
+                            finish()
                         }
                     }
                 }

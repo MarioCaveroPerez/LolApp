@@ -13,7 +13,7 @@
         android:id="@+id/tvRuneTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="PRECISION"
+        android:text="@string/precision"
         android:textStyle="bold"
         android:textSize="22sp"
         android:gravity="center"

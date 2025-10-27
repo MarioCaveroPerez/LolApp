@@ -10,22 +10,34 @@
     <string name="habilidades">Habilidades</string>
     <string name="skins">Skins</string>
     <string name="lore">Lore</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="skin_name">Skin Name</string>
     <string name="estad_sticas_del_campe_n">Estadísticas del Campeón</string>
     <string name="stats">Stats</string>
     <string name="version">1.0</string>
     <string name="ITEMS">ITEMS</string>
-
-    <string-array name="languages">
-        <item>Español</item>
-        <item>English</item>
-        <item>Français</item>
-        <item>Deutsch</item>
-        <item>Português</item>
-        <item>中文</item>
-        <item>日本語</item>
-    </string-array>
-
+    <string name="volver">Volver</string>
+    <string name="PropositoApp">Esta aplicación permite consultar información detallada sobre campeones, runas e ítems de League of Legends, incluyendo estadísticas, habilidades, skins, lore y descripciones completas de cada apartado.</string>
+    <string name="funcionalidades">Funcionalidades</string>
+    <string name="FuncionalidadesApp">• Consultar información detallada de campeones, runas e ítems\n\n• Ver estadísticas, habilidades y lore de los campeones\n\n• Explorar todas las skins disponibles pudiendo descargarlas en tu movil\n\n• Consultar información sobre los items de la Grieta del Invocador\n\n• Consultar información sobre las runas</string>    <string name="creditos">Créditos</string>
+    <string name="CreditosApp">Datos proporcionados por Data Dragon (Riot Games)\nDesarrollador: MarioCvPz</string>
+    <string name="contacto_soporte">Contacto / Soporte</string>
+    <string name="correo">Email: mariocvpz@gmail.com\nGitHub: github.com/mariocvpz</string>
+    <string name="Disclaimer">Esta app es un proyecto de terceros y no está afiliada ni respaldada por Riot Games. Toda la información mostrada es únicamente con fines educativos y de referencia.</string>
+    <string name="Copyright">League of Legends © Riot Games, Inc. Todos los derechos reservados.</string>
+    <string name="MadeWithLove">Made with ❤️ By Mario 😎</string>
+    <string name="configuraci_n">Configuración</string>
+    <string name="idioma">Idioma</string>
+    <string name="versi_n_de_la_app">Versión de la app</string>
+    <string name="calificar_la_aplicaci_n">Calificar la aplicación ⭐</string>
+    <string name="item_name">Item Name</string>
+    <string name="_0_gold">0 Gold</string>
+    <string name="item_description">Item description</string>
+    <string name="from">FROM:</string>
+    <string name="to">TO:</string>
+    <string name="dominaci_n">DOMINACIÓN</string>
+    <string name="hp">HP</string>
+    <string name="inspiracion">INSPIRACION</string>
+    <string name="precision">PRECISION</string>
+    <string name="valor">VALOR</string>
 </resources>

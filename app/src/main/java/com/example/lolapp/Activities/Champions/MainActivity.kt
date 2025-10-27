@@ -8,6 +8,7 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.view.GravityCompat
 import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
@@ -44,6 +45,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var repository: ChampionRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
         super.onCreate(savedInstanceState)
 
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -62,13 +64,21 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupNavigation() {
+        navView.itemBackground = null
+
         navView.setNavigationItemSelectedListener { menuItem ->
+            menuItem.isChecked = false
+
+            for (i in 0 until navView.menu.size()) {
+                navView.menu.getItem(i).isChecked = false
+            }
             when (menuItem.itemId) {
                 R.id.nav_items -> startActivity(Intent(this, ItemsActivity::class.java))
                 R.id.nav_runes -> startActivity(Intent(this, RunesActivity::class.java))
                 R.id.nav_settings -> startActivity(Intent(this, SettingsActivity::class.java))
                 R.id.info -> startActivity(Intent(this, InfoActivity::class.java))
             }
+
             drawerLayout.closeDrawer(GravityCompat.START)
             true
         }

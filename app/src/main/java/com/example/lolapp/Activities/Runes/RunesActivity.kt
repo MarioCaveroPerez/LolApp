@@ -47,13 +47,21 @@ class RunesActivity : AppCompatActivity() {
     }
 
     private fun setupNavigation() {
+        navView.itemBackground = null
+
         navView.setNavigationItemSelectedListener { menuItem ->
+            menuItem.isChecked = false
+
+            for (i in 0 until navView.menu.size()) {
+                navView.menu.getItem(i).isChecked = false
+            }
             when (menuItem.itemId) {
                 R.id.nav_champ ->startActivity(Intent(this, MainActivity::class.java))
                 R.id.nav_items -> startActivity(Intent(this, ItemsActivity::class.java))
                 R.id.nav_settings -> startActivity(Intent(this, SettingsActivity::class.java))
                 R.id.info -> startActivity(Intent(this, InfoActivity::class.java))
             }
+
             drawerLayout.closeDrawer(GravityCompat.START)
             true
         }
@@ -80,8 +88,10 @@ class RunesActivity : AppCompatActivity() {
                         imm.hideSoftInputFromWindow(editText.windowToken, 0)
                     }
                     else -> {
-                        isEnabled = false
-                        onBackPressedDispatcher.onBackPressed()
+                        val intent = Intent(this@RunesActivity, MainActivity::class.java)
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
+                        startActivity(intent)
+                        finish()
                     }
                 }
             }

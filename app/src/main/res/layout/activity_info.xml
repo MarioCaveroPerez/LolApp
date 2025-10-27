@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/scrollViewInfo"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -21,7 +22,7 @@
             android:layout_marginTop="24dp"
             android:layout_marginStart="12dp"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="Volver"
+            android:contentDescription="@string/volver"
             android:src="@drawable/ic_back"
             app:tint="@color/gold" />
 
@@ -31,8 +32,11 @@
             android:layout_width="120dp"
             android:layout_height="120dp"
             android:layout_gravity="center"
-            android:contentDescription="Logo de la App"
             android:src="@drawable/ic_lolappweb" />
+
+        <com.google.android.material.divider.MaterialDivider
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
 
         <!-- Propósito -->
         <TextView
@@ -43,7 +47,7 @@
             android:layout_marginBottom="24dp"
             android:fontFamily="@font/quicksand_regular"
             android:lineSpacingExtra="2dp"
-            android:text="Esta aplicación permite consultar información detallada sobre campeones, runas e ítems de League of Legends, incluyendo estadísticas, habilidades, skins, lore y descripciones completas de cada apartado."
+            android:text="@string/PropositoApp"
             android:textColor="@color/white"
             android:textSize="16sp" />
 
@@ -67,7 +71,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
-                    android:text="Funcionalidades"
+                    android:text="@string/funcionalidades"
                     android:textColor="@color/gold"
                     android:textSize="16sp"
                     android:textStyle="bold" />
@@ -76,7 +80,7 @@
                     android:id="@+id/tvFeatures"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="• Consultar información detallada de campeones, runas e ítems\n\n• Ver estadísticas, habilidades y lore de los campeones\n\n• Explorar todas las skins disponibles pudiendo descargarlas en tu movil\n\n• Consultar información sobre los items de la Grieta del Invocador\n\n• Consultar información sobre las runas"
+                    android:text="@string/FuncionalidadesApp"
                     android:textColor="@color/white"
                     android:textSize="15sp" />
             </LinearLayout>
@@ -102,7 +106,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
-                    android:text="Créditos"
+                    android:text="@string/creditos"
                     android:textColor="@color/gold"
                     android:textSize="16sp"
                     android:textStyle="bold" />
@@ -111,7 +115,7 @@
                     android:id="@+id/tvCredits"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Datos proporcionados por Data Dragon(Riot Games)\n\nDesarrollador: MarioCvPz"
+                    android:text="@string/CreditosApp"
                     android:textColor="@color/white"
                     android:textSize="15sp" />
             </LinearLayout>
@@ -137,7 +141,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
-                    android:text="Contacto / Soporte"
+                    android:text="@string/contacto_soporte"
                     android:textColor="@color/gold"
                     android:textSize="16sp"
                     android:textStyle="bold" />
@@ -146,7 +150,7 @@
                     android:id="@+id/tvContact"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Email: mariocvpz@gmail.com\n\nGitHub: github.com/mariocvpz"
+                    android:text="@string/correo"
                     android:textColor="@color/white"
                     android:textSize="15sp" />
             </LinearLayout>
@@ -173,7 +177,7 @@
                     android:layout_marginBottom="12dp"
                     android:fontFamily="@font/quicksand_regular"
                     android:lineSpacingExtra="2dp"
-                    android:text="Esta app es un proyecto de terceros y no está afiliada ni respaldada por Riot Games. Toda la información mostrada es únicamente con fines educativos y de referencia."
+                    android:text="@string/Disclaimer"
                     android:textColor="@color/white"
                     android:textSize="12sp" />
 
@@ -185,7 +189,7 @@
                     android:fontFamily="@font/quicksand_regular"
                     android:gravity="center"
                     android:lineSpacingExtra="2dp"
-                    android:text="League of Legends © Riot Games, Inc. Todos los derechos reservados."
+                    android:text="@string/Copyright"
                     android:textColor="@color/white"
                     android:textSize="12sp" />
             </LinearLayout>
@@ -197,10 +201,11 @@
             android:layout_marginBottom="16dp"
             android:fontFamily="@font/quicksand_regular"
             android:gravity="center"
-            android:text="Made with ❤️ By Mario 😎"
+            android:text="@string/MadeWithLove"
             android:textColor="@color/white"
             android:textSize="10sp"
-            android:textStyle="italic" />
+            android:textStyle="italic"
+            tools:ignore="SmallSp" />
 
     </LinearLayout>
 
