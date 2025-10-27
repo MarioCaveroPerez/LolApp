@@ -113,7 +113,7 @@ Puedes usar, modificar y distribuir el código libremente, siempre que se manten
 
 ## 💬 Autor
 
-👨‍💻 **Tu Nombre**  
+👨‍💻 **Mario Cavero Pérez**  
 📧 *mario.cavero2002@gmail.com*  
 🌍 [GitHub](https://github.com/MarioCaveroPerez)
 
