@@ -114,7 +114,7 @@ Puedes usar, modificar y distribuir el código libremente, siempre que se manten
 ## 💬 Autor
 
 👨‍💻 **Tu Nombre**  
-📧 *mario.cavero2002@cgmail.com*  
+📧 *mario.cavero2002@gmail.com*  
 🌍 [GitHub](https://github.com/MarioCaveroPerez)
 
 
